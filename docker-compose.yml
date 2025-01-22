@@ -1,18 +1,5 @@
 version: '3.8'
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
-    depends_on:
-      - db
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/learning-mate
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: ${secrets.MYSQL_ROOT_PASSWORD}
-
   db:
     image: mysql:8.0
     container_name: learning-mate-mysql
@@ -34,6 +21,18 @@ services:
       - "6380:6379"
     volumes:
       - redis-data:/data
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/learning-mate
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ${secrets.MYSQL_ROOT_PASSWORD}
 
 volumes:
   mysql-data:
