@@ -44,37 +44,34 @@ jobs:
           key: ${{ secrets.AWS_PRIVATE_KEY }}
           script: |
             docker pull ${{ env.DOCKER_IMAGE }}:${{ github.sha }}
-            docker-compose down
             echo "${{ secrets.APPLICATION_PROPERTIES }}" > application.properties
-            echo "version: '3.8'
-            services:
-              app:
-                image: ${{ env.DOCKER_IMAGE }}:${{ github.sha }}
-                ports:
-                  - '8080:8080'
-                depends_on:
-                  - db
-                  - redis
-                volumes:
-                  - ./application.properties:/app/application.properties
-                environment:
-                  SPRING_CONFIG_LOCATION: file:/app/application.properties
-              db:
-                image: mysql:8.0
-                volumes:
-                  - mysql-data:/var/lib/mysql
-                environment:
-                  MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-                  MYSQL_DATABASE: learning-mate
-                ports:
-                  - '3306:3306'
-              redis:
-                image: redis:6.2-alpine
-                ports:
-                  - '6379:6379'
-                volumes:
-                  - redis-data:/data
-            volumes:
-              mysql-data:
-              redis-data:" > docker-compose.yml
-            docker-compose up -d
+            
+            # Check if MySQL container is running
+            if ! docker ps | grep -q mysql; then
+              echo "MySQL container is not running. Starting MySQL..."
+              docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} -e MYSQL_DATABASE=learning-mate -p 3306:3306 -v mysql-data:/var/lib/mysql mysql:8.0
+            else
+              echo "MySQL container is already running."
+            fi
+
+            # Check if Redis container is running
+            if ! docker ps | grep -q redis; then
+              echo "Redis container is not running. Starting Redis..."
+              docker run -d --name redis -p 6379:6379 -v redis-data:/data redis:6.2-alpine
+            else
+              echo "Redis container is already running."
+            fi
+
+            # Stop and remove the old app container if it exists
+            docker stop app && docker rm app || true
+
+            # Start the new app container
+            docker run -d --name app \
+              -p 8080:8080 \
+              -v ./application.properties:/app/application.properties \
+              -e SPRING_CONFIG_LOCATION=file:/app/application.properties \
+              --link mysql:mysql \
+              --link redis:redis \
+              ${{ env.DOCKER_IMAGE }}:${{ github.sha }}
+
+            echo "Deployment completed."
