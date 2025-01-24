@@ -28,9 +28,9 @@ public class JoinService {
     public UserDTO.Info join(UserDTO.Join joinDTO) throws Exception {
 
         String password = joinDTO.getPassword();
-        String email = joinDTO.getEmail();
+        String userId = joinDTO.getUserId();
 
-        Boolean isExist = userRepository.existsByEmail(email);
+        Boolean isExist = userRepository.existsByUserId(userId);
 
         // 이메일 중복 확인
         if (isExist) {
@@ -41,7 +41,7 @@ public class JoinService {
 
         User user = User.builder()
                 .password(encryptedPassword)
-                .email(email)
+                .userId(userId)
                 .role(Role.USER)
                 .build();
 

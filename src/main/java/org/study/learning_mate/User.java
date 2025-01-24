@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public class User {
     @Id
-    @Column(name = "user_id",  nullable = false)
+    @Column(name = "id",  nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -32,8 +32,8 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "username")
-    private String username;
+    @Column(name = "userId")
+    private String userId;
 
     @Column(name = "password")
     private String password;

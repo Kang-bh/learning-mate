@@ -39,7 +39,7 @@ public class CustomUserDetails implements UserDetails {
     public String getUsername() {
 
         System.out.println("CustomUserDetails.getUsername");
-        return user.getUsername();
+        return user.getUserId();
     }
 
     public Long getId() {

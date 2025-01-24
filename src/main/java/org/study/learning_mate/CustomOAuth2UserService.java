@@ -45,7 +45,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             log.info("create user");
             User user = User.builder()
 //                    .profileImage(oAuth2Response.getProfileImage())
-                    .username(oAuth2Response.getName())
+                    .userId(oAuth2Response.getName())
                     .email(oAuth2Response.getEmail())
                     .password(null)
                     .role(Role.USER)
@@ -74,7 +74,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             UserDTO.Info userDTO = UserDTO.Info.builder()
                     .id(userEntity.getId())
                     .role(userEntity.getRole().toString())
-                    .username(userEntity.getUsername())
+                    .userId(userEntity.getUserId())
                     .email(userEntity.getEmail())
                     .build();
 

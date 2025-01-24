@@ -31,10 +31,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException { // todo : delete or customizer
-        System.out.println("username test : " + email);
-        User user = userRepository.findByEmail(email);
-        System.out.println(user);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException { // todo : delete or customizer
+        System.out.println("username test : " + username);
+        User user = userRepository.findByUserId(username);
+
         if (user != null) {
             return new CustomUserDetails(user);
         }
