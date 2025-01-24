@@ -81,9 +81,8 @@ public class SecurityConfig {
                         return configuration;
                     }
                 })));
-
-//        http
-//                .csrf((auth) -> auth.disable());
+        http
+               .csrf((auth) -> auth.disable());
         http
                 .formLogin((auth) -> auth.disable());
         http
