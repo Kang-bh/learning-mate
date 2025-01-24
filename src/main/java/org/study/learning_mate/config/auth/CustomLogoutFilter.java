@@ -36,6 +36,8 @@ public class CustomLogoutFilter extends OncePerRequestFilter {
             return;
         }
 
+
+
         String refresh = null;
         Cookie[] cookies = request.getCookies();
         log.info("cookies: {}", cookies);

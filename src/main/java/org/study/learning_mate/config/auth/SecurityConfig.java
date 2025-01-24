@@ -88,21 +88,21 @@ public class SecurityConfig {
         http
                 .httpBasic((auth) -> auth.disable());
 
-//        http
-//                .authorizeHttpRequests((auth) -> auth
-//                        .requestMatchers("/login", "/", "/health", "/join", "/re-issue", "/error", "/logout",
-//                                "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**",
-//                                "/css/**", "/js/**", "/images/**", "/resources/**", "/static/**").permitAll()
-//                        .anyRequest().authenticated()
-//                );
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/api/v1/login", "/api/v1/", "/api/v1/health", "/api/v1/join",
-                                "/api/v1/re-issue", "/api/v1/error", "/api/v1/logout",
+                        .requestMatchers("/login", "/", "/health", "/join", "/re-issue", "/error", "/logout",
                                 "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**",
                                 "/css/**", "/js/**", "/images/**", "/resources/**", "/static/**").permitAll()
                         .anyRequest().authenticated()
                 );
+//        http
+//                .authorizeHttpRequests((auth) -> auth
+//                        .requestMatchers("/api/v1/login", "/api/v1/", "/api/v1/health", "/api/v1/join",
+//                                "/api/v1/re-issue", "/api/v1/error", "/api/v1/logout",
+//                                "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**",
+//                                "/css/**", "/js/**", "/images/**", "/resources/**", "/static/**").permitAll()
+//                        .anyRequest().authenticated()
+//                );
 
 
         http
