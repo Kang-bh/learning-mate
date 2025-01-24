@@ -20,7 +20,7 @@ public class JoinController {
     }
 
     @PostMapping("/join")
-    @Parameter(name = "email", description = "email")
+    @Parameter(name = "userId", description = "userId")
     @Parameter(name = "password", description = "password")
     public SuccessResponse<UserDTO.Info> join(
             @RequestBody UserDTO.Join joinDTO
