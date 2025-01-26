@@ -99,7 +99,7 @@ public class ReissueController {
         cookie.setMaxAge(604800);  // 7 days
 
         cookie.setHttpOnly(true); // Set HttpOnly to prevent JavaScript access
-        cookie.setSecure(true); // 로컬에서 HTTPS를 사용하지 않을 경우
+//        cookie.setSecure(true); // 로컬에서 HTTPS를 사용하지 않을 경우
         cookie.setPath("/");
 
         cookie.setAttribute("SameSite", "None");
