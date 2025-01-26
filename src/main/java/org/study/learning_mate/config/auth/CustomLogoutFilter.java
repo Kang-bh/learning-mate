@@ -29,14 +29,13 @@ public class CustomLogoutFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
         String requestUri = request.getRequestURI();
         log.info("requestUri: {}", requestUri);
-        if (!requestUri.equals("/logout") || !request.getMethod().equals("POST")) {
+        if (!requestUri.equals("/api/v1/logout") || !request.getMethod().equals("POST")) {
             filterChain.doFilter(request, response);
             return;
         }
-
-
 
         String refresh = null;
         Cookie[] cookies = request.getCookies();

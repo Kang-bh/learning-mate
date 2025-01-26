@@ -2,6 +2,7 @@ package org.study.learning_mate.config.auth;
 
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -95,15 +96,6 @@ public class SecurityConfig {
                                 "/css/**", "/js/**", "/images/**", "/resources/**", "/static/**").permitAll()
                         .anyRequest().authenticated()
                 );
-//        http
-//                .authorizeHttpRequests((auth) -> auth
-//                        .requestMatchers("/api/v1/login", "/api/v1/", "/api/v1/health", "/api/v1/join",
-//                                "/api/v1/re-issue", "/api/v1/error", "/api/v1/logout",
-//                                "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**",
-//                                "/css/**", "/js/**", "/images/**", "/resources/**", "/static/**").permitAll()
-//                        .anyRequest().authenticated()
-//                );
-
 
         http
                 .addFilterBefore(new JWTFilter(jwtUtil, userRepository), LoginFilter.class);
@@ -111,6 +103,15 @@ public class SecurityConfig {
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshTokenRepository), UsernamePasswordAuthenticationFilter.class);
         http
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenRepository), LogoutFilter.class);
+
+//        http
+//            .logout(logout -> logout.
+//                    logoutUrl("/login")
+//                    .logoutSuccessHandler((request, response, authentication) -> {
+//                        response.setStatus(HttpServletResponse.SC_OK);
+//                    })
+//                    .permitAll()
+//            );
 
         http
                 .sessionManagement((session) -> session
