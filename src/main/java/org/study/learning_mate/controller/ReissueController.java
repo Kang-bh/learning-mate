@@ -83,7 +83,7 @@ public class ReissueController {
 //                cookie.getName(), cookie.getValue(), cookie.getMaxAge(), cookie.getPath()
 //        );
 
-//        response.setHeader("Set-Cookie", cookieHeader);
+        response.setHeader("Set-Cookie", String.valueOf(cookie));
         response.addCookie(cookie);
 
         JSONObject jsonResponse = new JSONObject();
