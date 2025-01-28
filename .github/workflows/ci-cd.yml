@@ -78,5 +78,7 @@ jobs:
           script: |
             cd deploy
             chmod 777 ./deploy.sh
+            docker-compose pull  # 최신 이미지 풀
+            docker-compose up -d  # 컨테이너 시작
             ./deploy.sh
             docker image prune -f
