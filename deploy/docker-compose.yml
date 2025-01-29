@@ -9,8 +9,11 @@ services:
       - REDIS_HOST=redis
       - DB_HOST=db
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
   green:
     image: kabyho3513/learning-mate-server:1.0.0
     container_name: green
@@ -20,22 +23,29 @@ services:
       - REDIS_HOST=redis
       - DB_HOST=db
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
   db:
     image: mysql:8.0
     container_name: learning-mate-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: $${secrets.MYSQL_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${secrets.MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: learning-mate
       MYSQL_USER: kang
-      MYSQL_PASSWORD: $${secrets.MYSQL_KANG_PASSWORD}
+      MYSQL_PASSWORD: ${secrets.MYSQL_KANG_PASSWORD}
     ports:
       - "3307:3306"
     volumes:
       - mysql-data:/var/lib/mysql
       - ./sql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
     container_name: learning-mate-redis
@@ -44,6 +54,12 @@ services:
       - "6380:6379"
     volumes:
       - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   app:
     build:
       context: ..
@@ -51,11 +67,14 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/learning-mate
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: $${secrets.MYSQL_ROOT_PASSWORD}
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/learning-mate
+      SPRING_DATASOURCE_USERNAME: kang
+      SPRING_DATASOURCE_PASSWORD: ${secrets.MYSQL_KANG_PASSWORD}
 
 volumes:
   mysql-data:
