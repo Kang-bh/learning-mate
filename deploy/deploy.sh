@@ -32,7 +32,7 @@ if [ -z "$IS_GREEN" ]; then # blue case
     docker-compose pull green
 
     echo "3. Start green container"
-    docker-compose up -d green
+    docker-compose up -d green --build
 
     while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
         echo "4. Green health check..."
@@ -76,7 +76,7 @@ else
     docker-compose pull blue
 
     echo "3. Start blue container"
-    docker-compose up -d blue
+    docker-compose up -d blue --build
 
     while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
         echo "4. Blue health check..."
