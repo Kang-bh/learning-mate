@@ -32,10 +32,10 @@ services:
     image: mysql:8.0
     container_name: learning-mate-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: ${secrets.MYSQL_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: $$ {secrets.MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: learning-mate
       MYSQL_USER: kang
-      MYSQL_PASSWORD: ${secrets.MYSQL_KANG_PASSWORD}
+      MYSQL_PASSWORD: $$ {secrets.MYSQL_KANG_PASSWORD}
     ports:
       - "3307:3306"
     volumes:
@@ -74,7 +74,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/learning-mate
       SPRING_DATASOURCE_USERNAME: kang
-      SPRING_DATASOURCE_PASSWORD: ${secrets.MYSQL_KANG_PASSWORD}
+      SPRING_DATASOURCE_PASSWORD: $$ {secrets.MYSQL_KANG_PASSWORD}
 
 volumes:
   mysql-data:
