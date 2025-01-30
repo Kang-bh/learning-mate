@@ -28,8 +28,8 @@ services:
     environment:
       - SPRING_CONFIG_LOCATION=file:/app/application.properties
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/learning-mate
-      - SPRING_DATASOURCE_USERNAME=kang
-      - SPRING_DATASOURCE_PASSWORD=${MYSQL_KANG_PASSWORD}  # Github Actions 환경 변수로 처리 가능
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_USER_PASSWORD}  # Github Actions 환경 변수로 처리 가능
       - SPRING_REDIS_HOST=redis
     depends_on:
       db:
@@ -48,8 +48,8 @@ services:
     environment:
       - SPRING_CONFIG_LOCATION=file:/app/application.properties
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/learning-mate
-      - SPRING_DATASOURCE_USERNAME=kang
-      - SPRING_DATASOURCE_PASSWORD=${MYSQL_KANG_PASSWORD}
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_USER_PASSWORD}
       - SPRING_REDIS_HOST=redis
     depends_on:
       db:
