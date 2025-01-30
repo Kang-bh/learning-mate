@@ -1,19 +1,35 @@
 version: '3.8'
+
 networks:
   app_network:
     driver: bridge
 
 services:
+  nginx:
+    image: nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - blue
+      - green
+    networks:
+      - app_network
+    restart: always  # Nginx가 비정상 종료되면 자동 재시작
+
   blue:
     image: kabyho3513/learning-mate-server:1.0.0
     container_name: blue
-    ports:
-      - "8081:8080"
+    expose:
+      - "8080"
     environment:
       - SPRING_CONFIG_LOCATION=file:/app/application.properties
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/learning-mate
       - SPRING_DATASOURCE_USERNAME=kang
-      - SPRING_DATASOURCE_PASSWORD=$${secrets.MYSQL_KANG_PASSWORD}
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_KANG_PASSWORD}  # Github Actions 환경 변수로 처리 가능
       - SPRING_REDIS_HOST=redis
     depends_on:
       db:
@@ -21,17 +37,19 @@ services:
       redis:
         condition: service_healthy
     restart: on-failure
+    networks:
+      - app_network
 
   green:
     image: kabyho3513/learning-mate-server:1.0.0
     container_name: green
-    ports:
-      - "8082:8080"
+    expose:
+      - "8080"
     environment:
       - SPRING_CONFIG_LOCATION=file:/app/application.properties
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/learning-mate
       - SPRING_DATASOURCE_USERNAME=kang
-      - SPRING_DATASOURCE_PASSWORD=$${secrets.MYSQL_KANG_PASSWORD}
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_KANG_PASSWORD}
       - SPRING_REDIS_HOST=redis
     depends_on:
       db:
@@ -39,31 +57,35 @@ services:
       redis:
         condition: service_healthy
     restart: on-failure
+    networks:
+      - app_network
 
   db:
     image: mysql:8.0
     container_name: learning-mate-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: $${secrets.MYSQL_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: learning-mate
       MYSQL_USER: kang
-      MYSQL_PASSWORD: $${secrets.MYSQL_KANG_PASSWORD}
+      MYSQL_PASSWORD: ${MYSQL_KANG_PASSWORD}
     ports:
       - "3307:3306"
     volumes:
       - mysql-data:/var/lib/mysql
       - ./sql:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "kang", "-p$${secrets.MYSQL_KANG_PASSWORD}"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "kang", "-p${MYSQL_KANG_PASSWORD}"]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - app_network
 
   redis:
     container_name: learning-mate-redis
     image: redis:6.2-alpine
-    ports:
-      - "6380:6379"
+    expose:
+      - "6379"
     volumes:
       - redis-data:/data
     healthcheck:
@@ -71,6 +93,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - app_network
 
 volumes:
   mysql-data:
