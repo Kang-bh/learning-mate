@@ -11,8 +11,8 @@ services:
     expose:
       - "8082:8081"
     depends_on:
-      - learning-mate-redis
-      - learning-mate-mysql
+      - redis
+      - mysql
 
   green:
     image: kabyho3513/learning-mate-server:1.0.0
