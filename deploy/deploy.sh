@@ -42,7 +42,7 @@ if [ -z "$IS_GREEN" ]; then # blue -> green
         HTTP_STATUS=$(echo $RESPONSE | sed -e 's/.*HTTPSTATUS://')
         echo "Response code: $HTTP_STATUS"
 
-        if [ "$HTTP_STATUS" -eq 200 ]; then
+        if [[ "$HTTP_STATUS" =~ ^[0-9]+$ ]] && [ "$HTTP_STATUS" -eq 200 ]; then
             echo "Health check success"
             break
         fi
@@ -56,6 +56,7 @@ if [ -z "$IS_GREEN" ]; then # blue -> green
         docker-compose rm -f green
         exit 1
     fi
+
 
     echo "5. Updating nginx upstream to GREEN"
     echo "upstream active_upstream { server green:8080; }" | sudo tee $UPSTREAM_CONF
@@ -81,14 +82,14 @@ else # green -> blue
     docker-compose up -d blue --build
 
     while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-        echo "4. Blue health check..."
+        echo "4. Green health check..."
         sleep 5
 
-        RESPONSE=$(docker exec blue curl --max-time 5 --silent --write-out "HTTPSTATUS:%{http_code}" --output /dev/null http://localhost:8080/actuator/health)
+        RESPONSE=$(docker exec green curl --max-time 5 --silent --write-out "HTTPSTATUS:%{http_code}" --output /dev/null http://localhost:8080/actuator/health)
         HTTP_STATUS=$(echo $RESPONSE | sed -e 's/.*HTTPSTATUS://')
         echo "Response code: $HTTP_STATUS"
 
-        if [ "$HTTP_STATUS" -eq 200 ]; then
+        if [[ "$HTTP_STATUS" =~ ^[0-9]+$ ]] && [ "$HTTP_STATUS" -eq 200 ]; then
             echo "Health check success"
             break
         fi
@@ -98,10 +99,11 @@ else # green -> blue
 
     if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
         echo "Health check failed after maximum retries. Rolling back..."
-        docker-compose stop blue
-        docker-compose rm -f blue
+        docker-compose stop green
+        docker-compose rm -f green
         exit 1
     fi
+
 
     echo "5. Updating nginx upstream to BLUE"
     echo "upstream active_upstream { server blue:8080; }" | sudo tee $UPSTREAM_CONF
