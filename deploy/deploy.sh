@@ -38,7 +38,7 @@ if [ -z "$IS_GREEN" ]; then # blue -> green
         echo "4. Green health check..."
         sleep 5
 
-        RESPONSE=$(curl --max-time 5 --silent --write-out "HTTPSTATUS:%{http_code}" --output /dev/null http://127.0.0.1:$GREEN_PORT/health)
+        RESPONSE=$(docker exec green curl --max-time 5 --silent --write-out "HTTPSTATUS:%{http_code}" --output /dev/null http://localhost:8080/actuator/health)
         HTTP_STATUS=$(echo $RESPONSE | sed -e 's/.*HTTPSTATUS://')
         echo "Response code: $HTTP_STATUS"
 
@@ -84,7 +84,7 @@ else # green -> blue
         echo "4. Blue health check..."
         sleep 5
 
-        RESPONSE=$(curl --max-time 5 --silent --write-out "HTTPSTATUS:%{http_code}" --output /dev/null http://127.0.0.1:$BLUE_PORT/health)
+        RESPONSE=$(docker exec blue curl --max-time 5 --silent --write-out "HTTPSTATUS:%{http_code}" --output /dev/null http://localhost:8080/actuator/health)
         HTTP_STATUS=$(echo $RESPONSE | sed -e 's/.*HTTPSTATUS://')
         echo "Response code: $HTTP_STATUS"
 
