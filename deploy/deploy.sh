@@ -1,19 +1,8 @@
 #!/bin/bash
 
-# Check if Nginx is installed
-if ! command -v nginx &> /dev/null; then
-    echo "Nginx is not installed. Installing Nginx..."
-    sudo apt update && sudo apt install -y nginx
-    if [ $? -ne 0 ]; then
-        echo "Failed to install Nginx. Exiting."
-        exit 1
-    fi
-    echo "Nginx installed successfully."
-fi
+IS_GREEN=$(docker ps | grep green)
+DEFAULT_CONF= "/etc/nginx/nginx.conf"
 
-# 현재 실행 중인 컨테이너 확인 (정확한 이름 매칭)
-IS_GREEN=$(docker ps --format '{{.Names}}' | grep -w green)
-UPSTREAM_CONF="/etc/nginx/upstream.conf"
 
 MAX_RETRIES=30   # Limit the number of retries (5 minutes with 10s intervals)
 RETRY_COUNT=0
@@ -21,64 +10,69 @@ RETRY_COUNT=0
 BLUE_PORT=8081
 GREEN_PORT=8082
 
-if [ -z "$IS_GREEN" ]; then # blue -> green
-    echo "### BLUE => GREEN ###"
-    TARGET_CONTAINER="green"
-    OLD_CONTAINER="blue"
-else # green -> blue
-    echo "### GREEN => BLUE ###"
-    TARGET_CONTAINER="blue"
-    OLD_CONTAINER="green"
-fi
+if [ -z $IS_GREEN  ];then # blue인 경우
 
-echo "1. Stopping and removing old $TARGET_CONTAINER container if exists"
-docker-compose stop $TARGET_CONTAINER || true
-docker-compose rm -f $TARGET_CONTAINER || true
+  echo "### BLUE => GREEN ###"
 
-echo "2. Get $TARGET_CONTAINER image"
-docker-compose pull $TARGET_CONTAINER
+  echo "1. get green image"
+  docker-compose pull green # green으로 이미지를 내려받습니다.
 
-echo "3. Start $TARGET_CONTAINER container"
-docker-compose up -d $TARGET_CONTAINER --build
+  echo "2. green container up"
+  docker-compose up -d green # green 컨테이너 실행
 
-while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-    echo "4. $TARGET_CONTAINER health check..."
+   while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+      echo "3. green health check..."
+      sleep 5
+
+      RESPONSE=$(curl --max-time 5 --silent --write-out "HTTPSTATUS:%{http_code}" --output /dev/null http://127.0.0.1:$GREEN_PORT/health)
+      HTTP_STATUS=$(echo $RESPONSE | sed -e 's/.*HTTPSTATUS://')
+      echo "Response code: $HTTP_STATUS"
+
+      if [ $? -eq 0 ]; then
+        echo "health check success"
+        break
+      fi
+
+      RETRY_COUNT=$((RETRY_COUNT+1))
+    done
+  echo "4. reload nginx"
+  sudo cp /etc/nginx/nginx.green.conf /etc/nginx/nginx.conf
+  sudo nginx -t && sudo nginx -s reload
+
+  echo "5. blue container down"
+  docker-compose stop blue
+
+else
+  echo "### GREEN => BLUE ###"
+
+  echo "1. get blue image"
+  docker-compose pull blue
+
+  echo "2. blue container up"
+  docker-compose up -d blue
+
+
+  while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+    echo "3. blue health check..."
     sleep 5
 
-    # 컨테이너 상태 확인
-    CONTAINER_STATUS=$(docker inspect -f '{{.State.Status}}' $TARGET_CONTAINER 2>/dev/null)
-
-    if [ "$CONTAINER_STATUS" != "running" ]; then
-        echo "$TARGET_CONTAINER container is not running. Status: $CONTAINER_STATUS"
-        RETRY_COUNT=$((RETRY_COUNT+1))
-        continue
-    fi
-
-    RESPONSE=$(docker exec $TARGET_CONTAINER curl --max-time 5 --silent --write-out "HTTPSTATUS:%{http_code}" --output /dev/null http://localhost:8080/actuator/health)
+    RESPONSE=$(curl --max-time 5 --silent --write-out "HTTPSTATUS:%{http_code}" --output /dev/null http://127.0.0.1:$BLUE_PORT/health)
     HTTP_STATUS=$(echo $RESPONSE | sed -e 's/.*HTTPSTATUS://')
     echo "Response code: $HTTP_STATUS"
 
-    if [[ "$HTTP_STATUS" =~ ^[0-9]+$ ]] && [ "$HTTP_STATUS" -eq 200 ]; then
-        echo "Health check success"
-        break
+    if [ $? -eq 0 ]; then
+      echo "health check success"
+      break
     fi
 
     RETRY_COUNT=$((RETRY_COUNT+1))
-done
+  done
 
-if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
-    echo "Health check failed after maximum retries. Rolling back..."
-    docker-compose stop $TARGET_CONTAINER
-    docker-compose rm -f $TARGET_CONTAINER
-    exit 1
+  echo "4. reload nginx"
+  sudo cp /etc/nginx/nginx.blue.conf /etc/nginx/nginx.conf
+  sudo nginx -t && sudo nginx -s reload
+
+  echo "5. green container down"
+  docker-compose stop green
+
 fi
-
-echo "5. Updating nginx upstream to $TARGET_CONTAINER"
-echo "upstream active_upstream { server $TARGET_CONTAINER:8080; }" | sudo tee $UPSTREAM_CONF
-
-echo "6. Reloading nginx"
-sudo nginx -t && sudo nginx -s reload
-
-echo "7. Stopping and removing $OLD_CONTAINER container"
-docker-compose stop $OLD_CONTAINER || true
-docker-compose rm -f $OLD_CONTAINER || true
