@@ -23,7 +23,7 @@ services:
       - redis
       - mysql
   mysql:
-    image: mysql:latest
+    image: mysql:8.0
     container_name: learning-mate-mysql
     environment:
       MYSQL_ROOT_PASSWORD: 1234
