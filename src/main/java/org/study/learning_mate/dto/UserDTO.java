@@ -14,23 +14,23 @@ public class UserDTO {
         private Long id;
         private String role;
         private String email;
-        private String userId;
+        private String name;
     }
 
     @Getter
     @Setter
 //    @Builder
     public static class Join {
-        private String userId;
+        private final String email;
         private String password;
 
         @JsonCreator
         public Join(
-                @JsonProperty("userId") String userId,
+                @JsonProperty("email") String email,
                 @JsonProperty("password") String password
         ) {
             this.password = password;
-            this.userId = userId;
+            this.email = email;
         }
     }
 

@@ -4,7 +4,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.study.learning_mate.User;
+import org.study.learning_mate.user.User;
 import org.study.learning_mate.UserRepository;
 import org.study.learning_mate.dto.CustomUserDetails;
 
@@ -31,9 +31,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException { // todo : delete or customizer
-        System.out.println("username test : " + username);
-        User user = userRepository.findByUserId(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException { // todo : delete or customizer
+        System.out.println("email test : " + email);
+        User user = userRepository.findByEmail(email);
 
         if (user != null) {
             return new CustomUserDetails(user);

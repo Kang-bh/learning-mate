@@ -1,13 +1,16 @@
 package org.study.learning_mate;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "RefreshToken", schema = "learning_mate")
+@Builder
+@AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "refresh-token", schema = "learning_mate")
 public class RefreshToken {
 
     @Id
@@ -23,4 +26,8 @@ public class RefreshToken {
 
     @Column(name="expiration")
     private String expiration;
+
+    public RefreshToken() {
+
+    }
 }

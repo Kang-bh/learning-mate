@@ -57,10 +57,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
 
             UserDTO.Join data = objectMapper.readValue(messageBody, UserDTO.Join.class);
-            String userId = data.getUserId();
+            String email = data.getEmail();
             String password = data.getPassword();
             log.info("attemptAuthentication2");
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userId, password); // username, password 검증을 위해 token 담기
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password); // username, password 검증을 위해 token 담기
             log.info("attemptAuthentication3");
             return authenticationManager.authenticate(authToken); // AuthenticationManager 전달
 

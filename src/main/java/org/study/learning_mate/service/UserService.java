@@ -1,7 +1,7 @@
 package org.study.learning_mate.service;
 
 import org.springframework.stereotype.Service;
-import org.study.learning_mate.User;
+import org.study.learning_mate.user.User;
 import org.study.learning_mate.UserRepository;
 import org.study.learning_mate.dto.UserDTO;
 import org.study.learning_mate.utils.UserMapper;

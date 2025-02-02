@@ -1,10 +1,11 @@
-package org.study.learning_mate;
+package org.study.learning_mate.user;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.study.learning_mate.Role;
 
 import java.time.LocalDateTime;
 
@@ -26,14 +27,14 @@ public class User {
     @Column(name = "role")
     private Role role;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(columnDefinition = "TEXT", name = "profile_image")
     private String profileImage;
 
     @Column(name = "email")
     private String email;
-
-    @Column(name = "userId")
-    private String userId;
 
     @Column(name = "password")
     private String password;

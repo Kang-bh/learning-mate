@@ -3,7 +3,7 @@ package org.study.learning_mate.service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.study.learning_mate.Role;
-import org.study.learning_mate.User;
+import org.study.learning_mate.user.User;
 import org.study.learning_mate.UserRepository;
 import org.study.learning_mate.dto.UserDTO;
 import org.study.learning_mate.utils.UserMapper;
@@ -28,9 +28,9 @@ public class JoinService {
     public UserDTO.Info join(UserDTO.Join joinDTO) throws Exception {
 
         String password = joinDTO.getPassword();
-        String userId = joinDTO.getUserId();
+        String email = joinDTO.getEmail();
 
-        Boolean isExist = userRepository.existsByUserId(userId);
+        Boolean isExist = userRepository.existsByEmail(email);
 
         // 이메일 중복 확인
         if (isExist) {
@@ -41,7 +41,7 @@ public class JoinService {
 
         User user = User.builder()
                 .password(encryptedPassword)
-                .userId(userId)
+                .email(email)
                 .role(Role.USER)
                 .build();
 

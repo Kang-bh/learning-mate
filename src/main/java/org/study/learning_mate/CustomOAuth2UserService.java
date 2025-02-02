@@ -10,6 +10,7 @@ import org.study.learning_mate.dto.CustomOAuth2UserDTO;
 import org.study.learning_mate.dto.KakaoResponse;
 import org.study.learning_mate.dto.OAuth2Response;
 import org.study.learning_mate.dto.UserDTO;
+import org.study.learning_mate.user.User;
 
 @Slf4j
 @Service
@@ -45,7 +46,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             log.info("create user");
             User user = User.builder()
 //                    .profileImage(oAuth2Response.getProfileImage())
-                    .userId(oAuth2Response.getName())
+                    .name(oAuth2Response.getName())
                     .email(oAuth2Response.getEmail())
                     .password(null)
                     .role(Role.USER)
@@ -74,7 +75,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             UserDTO.Info userDTO = UserDTO.Info.builder()
                     .id(userEntity.getId())
                     .role(userEntity.getRole().toString())
-                    .userId(userEntity.getUserId())
+                    .name(userEntity.getName())
                     .email(userEntity.getEmail())
                     .build();
 

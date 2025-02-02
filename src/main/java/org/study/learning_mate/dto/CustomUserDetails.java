@@ -2,7 +2,7 @@ package org.study.learning_mate.dto;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.study.learning_mate.User;
+import org.study.learning_mate.user.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,7 +39,7 @@ public class CustomUserDetails implements UserDetails {
     public String getUsername() {
 
         System.out.println("CustomUserDetails.getUsername");
-        return user.getUserId();
+        return user.getName();
     }
 
     public Long getId() {

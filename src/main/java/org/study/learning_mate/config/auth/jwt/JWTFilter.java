@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.study.learning_mate.User;
+import org.study.learning_mate.user.User;
 import org.study.learning_mate.UserRepository;
 import org.study.learning_mate.dto.CustomUserDetails;
 
