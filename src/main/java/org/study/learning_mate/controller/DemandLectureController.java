@@ -3,12 +3,16 @@ package org.study.learning_mate.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.study.learning_mate.SuccessResponse;
 import org.study.learning_mate.demandlecture.DemandLectureService;
+import org.study.learning_mate.dto.CommentDTO;
 import org.study.learning_mate.dto.CustomUserDetails;
 import org.study.learning_mate.dto.DemandLectureDTO;
 import org.study.learning_mate.service.UserService;
@@ -31,7 +35,7 @@ public class DemandLectureController {
 
     @Operation(summary = "날.강.도. 게시글 조회", description = "날.강.도. 게시글을 조회합니다.")
     @GetMapping("/demand-lectures")
-    public SuccessResponse<List<DemandLectureDTO.DemandLectureResponse>> getDemandLectures(Pageable pageable) {
+    public SuccessResponse<List<DemandLectureDTO.DemandLectureResponse>> getDemandLectures(@ParameterObject Pageable pageable) {
         List<DemandLectureDTO.DemandLectureResponse> result = demandLectureService.findAllDemandLectureList(pageable);
         return SuccessResponse.success(result);
     }
@@ -49,6 +53,14 @@ public class DemandLectureController {
 
     @PostMapping("/demand-lectures")
     public SuccessResponse<?> createDemandLecture(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "날.강.도. 생성 객체",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = DemandLectureDTO.createDemandLectureRequest.class)
+                    )
+            )
             @RequestBody(required = true) DemandLectureDTO.createDemandLectureRequest request,
             @AuthenticationPrincipal CustomUserDetails userDetails
         ) {
@@ -64,6 +76,14 @@ public class DemandLectureController {
     })
     @PutMapping("/demand-lectures/{demandLectureId}")
     public SuccessResponse<DemandLectureDTO.DemandLectureDetailResponse> updateDemandLecture(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "날.강.도. 수정 객체",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = DemandLectureDTO.updateDemandLectureRequest.class)
+                    )
+            )
             @RequestBody(required = true) DemandLectureDTO.updateDemandLectureRequest request,
             @PathVariable Long demandLectureId,
             @AuthenticationPrincipal CustomUserDetails userDetails
@@ -78,7 +98,10 @@ public class DemandLectureController {
             @Parameter(name = "demandLectureId", description = "날.강.도. 게시글 식별자", required = true),
     })
     @DeleteMapping("/demand-lectures/{demandLectureId}")
-    public SuccessResponse<?> deleteDemandLecture(@PathVariable Long demandLectureId, @AuthenticationPrincipal CustomUserDetails userDetails) throws AccessDeniedException {
+    public SuccessResponse<?> deleteDemandLecture(
+            @PathVariable Long demandLectureId,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) throws AccessDeniedException {
         Long userId = userDetails.getId();
         User user = userService.findUserById(userId);
         demandLectureService.deleteDemandLectureById(demandLectureId, user);

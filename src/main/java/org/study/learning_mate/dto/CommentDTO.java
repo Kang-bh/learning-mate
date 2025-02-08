@@ -1,5 +1,6 @@
 package org.study.learning_mate.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,11 +20,12 @@ public class CommentDTO {
         private Date updateTime;
     }
 
-//    @Getter
-//    @Setter
-//    @Builder
-//    public static class CreateCommentRequest {
-//        private Long postId;
-//        private String content;
-//    }
+    @Getter
+    @Setter
+    @Builder
+    @Schema(description = "Comment Request DTO")
+    public static class CommentRequest {
+        @Schema(description = "내용")
+        private String content;
+    }
 }

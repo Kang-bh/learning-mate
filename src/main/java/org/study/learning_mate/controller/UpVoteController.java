@@ -1,6 +1,8 @@
 package org.study.learning_mate.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -36,7 +38,7 @@ public class UpVoteController {
     }
 
     @Operation(summary = "날강도 게시글 추천 조회", description = "Lecture, 날강도 글의 추천글을 조회합니다..")
-    @GetMapping("/posts/:postId/up-votes")
+    @GetMapping("/posts/{postId}/up-votes")
     public SuccessResponse<List<UpVoteDTO.UpVoteResponse>> getUpVotes(
             @PathVariable Long postId,
             Pageable pageable
@@ -46,7 +48,10 @@ public class UpVoteController {
     }
 
     @Operation(summary = "날강도 게시글 추천글 생성", description = "Lecture, 날강도 글의 추천글을 작성합니다.")
-    @PostMapping("/posts/:postId/up-votes")
+    @Parameters({
+            @Parameter(name = "postId", description = "게시글 식별자", required = true),
+    })
+    @PostMapping("/posts/{postId}/up-votes")
     public SuccessResponse<?> createUpVote(
             @PathVariable Long postId,
             @RequestBody UpVoteDTO.UpVoteRequest request,
@@ -58,7 +63,10 @@ public class UpVoteController {
     }
 
     @Operation(summary = "날강도 게시글 추천글 수정", description = "Lecture, 날강도 글의 추천글을 수정합니다.")
-    @PutMapping("/up-votes/:upVoteId")
+    @Parameters({
+            @Parameter(name = "upVoteId", description = "추천글 식별자", required = true),
+    })
+    @PutMapping("/up-votes/{upVoteId}")
     public SuccessResponse<UpVoteDTO.UpVoteResponse> updateUpVote(
             @PathVariable Long upVoteId,
             @RequestBody UpVoteDTO.UpVoteRequest request,
@@ -69,7 +77,10 @@ public class UpVoteController {
     }
 
     @Operation(summary = "날강도 게시글 삭제", description = "Lecture, 날강도 글의 추천글을 삭제합니다.")
-    @DeleteMapping("/up-votes/:upVoteId")
+    @Parameters({
+            @Parameter(name = "upVoteId", description = "추천글 식별자", required = true),
+    })
+    @DeleteMapping("/up-votes/{upVoteId}")
     public SuccessResponse<?> deleteUpVote(
             @PathVariable Long upVoteId,
             @AuthenticationPrincipal CustomUserDetails userDetails

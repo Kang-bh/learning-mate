@@ -14,10 +14,11 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "demand-lecture", schema = "learning_mate")
+@Table(name = "demand_lecture", schema = "learning_mate")
 @EntityListeners(AuditingEntityListener.class)
 public class DemandLecture {
 
+    @Id
     @EmbeddedId
     private DemandLecturePK demandLecturePK;
 
@@ -28,4 +29,9 @@ public class DemandLecture {
     @Column(name = "updated_at")
     @LastModifiedDate
     private Date updatedAt;
+
+    public Long getPostId() {
+        return this.demandLecturePK.getPost().getId();
+    }
+
 }

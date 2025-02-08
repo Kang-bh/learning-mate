@@ -1,6 +1,8 @@
 package org.study.learning_mate.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +45,10 @@ public class LikeController {
     }
 
     @Operation(summary = "게시글 like 조회", description = "Lecture, 날강도 글에 좋아요를 눌렀는 지 조회합니다.")
-    @GetMapping("/posts/:postId/exists")
+    @Parameters({
+            @Parameter(name = "postId", description = "게시글 식별값", required = true),
+    })
+    @GetMapping("/posts/{postId}/exists")
     public SuccessResponse<?> isExistsLikePost(
             @PathVariable Long postId,
             @AuthenticationPrincipal CustomUserDetails userDetails
@@ -53,7 +58,10 @@ public class LikeController {
     }
 
     @Operation(summary = "추천 글 like 조회", description = "추천글에 좋아요를 눌렀는 지 조회합니다.")
-    @GetMapping("/up-votes/:upVoteId/exists")
+    @Parameters({
+            @Parameter(name = "upVoteId", description = "추천글 식별값", required = true),
+    })
+    @GetMapping("/up-votes/{upVoteId}/exists")
     public SuccessResponse<?> isExistsLikeUpVote(
             @PathVariable Long upVoteId,
             @AuthenticationPrincipal CustomUserDetails userDetails
@@ -63,7 +71,10 @@ public class LikeController {
     }
 
     @Operation(summary = "비추천 글 like 조회", description = "비추천글에 좋아요를 눌렀는 지 조회합니다.")
-    @GetMapping("/down-votes/:downVoteId/exists")
+    @Parameters({
+            @Parameter(name = "downVoteId", description = "비추천글 식별값", required = true),
+    })
+    @GetMapping("/down-votes/{downVoteId}/exists")
     public SuccessResponse<?> isExistsLikeDownVote(
             @PathVariable Long downVoteId,
             @AuthenticationPrincipal CustomUserDetails userDetails
@@ -74,7 +85,10 @@ public class LikeController {
 
     // 좋아요
     @Operation(summary = "게시글 좋아요", description = "게시글(Lecture, 날강도)에 좋아요를 누릅니다.")
-    @PostMapping("/posts/:postId/like")
+    @Parameters({
+            @Parameter(name = "postId", description = "게시글 식별값", required = true),
+    })
+    @PostMapping("/posts/{postId}/like")
     public SuccessResponse<?> likePost(
             @PathVariable Long postId,
             @AuthenticationPrincipal CustomUserDetails userDetails
@@ -86,8 +100,11 @@ public class LikeController {
     }
 
     @Operation(summary = "추천 좋아요", description = "추천글에 좋아요를 누릅니다.")
-    @PostMapping("/up-vote/:upVoteId/like")
-    public SuccessResponse<?> likeUpvote(
+    @Parameters({
+            @Parameter(name = "upVoteId", description = "추천글 식별값", required = true),
+    })
+    @PostMapping("/up-vote/{upVoteId}/like")
+    public SuccessResponse<?> likeUpVote(
             @PathVariable Long upvoteId,
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
@@ -98,7 +115,10 @@ public class LikeController {
     }
 
     @Operation(summary = "비추천 좋아요", description = "비추천글에 좋아요를 누릅니다.")
-    @PostMapping("/down-vote/:downVoteId/like")
+    @Parameters({
+            @Parameter(name = "downVoteId", description = "비추천글 식별값", required = true),
+    })
+    @PostMapping("/down-vote/{downVoteId}/like")
     public SuccessResponse<?> likeDownVote(
             @PathVariable Long downVoteId,
             @AuthenticationPrincipal CustomUserDetails userDetails
@@ -112,7 +132,10 @@ public class LikeController {
 
     // 좋아요 취소
     @Operation(summary = "게시글 좋아요 취소", description = "게시글의 좋아요를 삭제합니다.")
-    @DeleteMapping("/posts/:postId/unlike")
+    @Parameters({
+            @Parameter(name = "postId", description = "게시글 식별값", required = true),
+    })
+    @DeleteMapping("/posts/{postId}/unlike")
     public SuccessResponse<?> unlikePost(
             @PathVariable Long postId,
             @AuthenticationPrincipal CustomUserDetails userDetails
@@ -122,7 +145,10 @@ public class LikeController {
     }
 
     @Operation(summary = "추천글 좋아요 취소", description = "추천글의 좋아요를 삭제합니다.")
-    @DeleteMapping("/up-votes/:upVoteId/unlike")
+    @Parameters({
+            @Parameter(name = "upVoteId", description = "추천글 식별값", required = true),
+    })
+    @DeleteMapping("/up-votes/{upVoteId}/unlike")
     public SuccessResponse<?> unlikeUpVote(
             @PathVariable Long upVoteId,
             @AuthenticationPrincipal CustomUserDetails userDetails
@@ -132,7 +158,10 @@ public class LikeController {
     }
 
     @Operation(summary = "비추천글 좋아요 취소", description = "비추천글의 좋아요를 삭제합니다.")
-    @DeleteMapping("/down-votes/:downVoteId/unlike")
+    @Parameters({
+            @Parameter(name = "downVoteId", description = "비추천글 식별값", required = true),
+    })
+    @DeleteMapping("/down-votes/{downVoteId}/unlike")
     public SuccessResponse<?> unlikeDownVote(
             @PathVariable Long downVoteId,
             @AuthenticationPrincipal CustomUserDetails userDetails

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.study.learning_mate.dto.LectureDTO;
+import org.study.learning_mate.platform.Platform;
 import org.study.learning_mate.platform.PlatformRepository;
 import org.study.learning_mate.platform.PlatformTypeManager.PlatformType;
 import org.study.learning_mate.post.Post;
@@ -82,9 +83,13 @@ public class LectureService {
         // 이미 존재하는 강의인지 확인 by title
         // Platform check
         //
+        Platform platform = platformRepository.findByUrlContainingPrefix(url);
+
+        System.out.println("platform = " + platform);
 
         String title = crawlService.crawlLectureTitle(url);
         Boolean isExist = postRepository.existsByTitle(title);
+
 
         // TODO : ALREADY EXIST ERROR
 //        if (isExist) {
@@ -108,6 +113,7 @@ public class LectureService {
         Lecture lecture = Lecture.builder()
                 .url(url)
                 .post(post)
+                .platform(platform)
 //                .platform("")
                 .build();
 

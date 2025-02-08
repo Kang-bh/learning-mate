@@ -1,5 +1,6 @@
 package org.study.learning_mate.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +22,9 @@ public class LectureDTO {
     }
 
     @Getter
+    @Schema(description = "Lecture Request DTO")
     public static class createLectureRequest {
+        @Schema(description = "강의 url")
         private String url;
     }
 }

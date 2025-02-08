@@ -3,6 +3,8 @@ package org.study.learning_mate.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -47,6 +49,14 @@ public class CommentController {
     })
     @PostMapping("/posts/{postId}/comments")
     public SuccessResponse<?> saveComment(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Comment 생성 객체",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = CommentDTO.CommentRequest.class)
+                    )
+            )
             @RequestBody String content,
             @PathVariable Long postId,
             @AuthenticationPrincipal CustomUserDetails userDetails
@@ -61,7 +71,17 @@ public class CommentController {
             @Parameter(name = "commentId", description = "댓글 식별자", required = true),
     })
     @PutMapping("/comments/{commentId}")
-    public SuccessResponse<CommentDTO.CommentResponse> updateComment(@Parameter(description = "댓글 식별자") @PathVariable Long commentId, @RequestBody String content) {
+    public SuccessResponse<CommentDTO.CommentResponse> updateComment(
+            @Parameter(description = "댓글 식별자") @PathVariable Long commentId,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Comment 수정 객체",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = CommentDTO.CommentRequest.class)
+                    )
+            )
+            @RequestBody String content) {
         CommentDTO.CommentResponse result = commentService.updateComment(content, commentId);
         return SuccessResponse.success(result);
     }

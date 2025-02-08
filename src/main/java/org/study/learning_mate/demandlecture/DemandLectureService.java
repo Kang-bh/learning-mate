@@ -39,9 +39,7 @@ public class DemandLectureService {
 
     // 날강도 상세 조회
     public DemandLectureDTO.DemandLectureDetailResponse findDemandLectureById(Long demandLectureId) {
-        DemandLecture demandLecture = demandLectureRepository.findById(demandLectureId).orElseThrow(() -> {
-            throw new NoSuchElementException("No such demandLecture");
-        });
+        DemandLecture demandLecture = demandLectureRepository.findByPostId(demandLectureId);
 
         return demandLectureMapper.toDemandLectureDetailDTO(demandLecture);
     }
@@ -49,6 +47,9 @@ public class DemandLectureService {
     // 날강도 생성
     @Transactional
     public void createDemandLecture(DemandLectureDTO.createDemandLectureRequest request, User user) {
+
+        System.out.println("title + " + request.getTitle());
+        System.out.println("content + " + request.getContent());
 
         Post post = Post.builder()
                 .postType(PostType.DEMAND_LECTURE)
@@ -88,9 +89,7 @@ public class DemandLectureService {
 
         postRepository.save(post);
 
-        DemandLecture demandLecture = demandLectureRepository.findById(demandLectureId).orElseThrow(() -> {
-            throw new NoSuchElementException("No such demandLecture");
-        });
+        DemandLecture demandLecture = demandLectureRepository.findByPostId(demandLectureId);
 
         return demandLectureMapper.toDemandLectureDetailDTO(demandLecture);
     }
@@ -99,9 +98,7 @@ public class DemandLectureService {
     @Transactional
     public void deleteDemandLectureById(Long demandLectureId, User user ) throws AccessDeniedException {
         // check 권한
-        DemandLecture demandLecture = demandLectureRepository.findById(demandLectureId).orElseThrow(() -> {
-            throw new NoSuchElementException("No such demandLecture");
-        });
+        DemandLecture demandLecture = demandLectureRepository.findByPostId(demandLectureId);
 
         if (user.getId() != demandLecture.getDemandLecturePK().getUser().getId()) {
             throw new AccessDeniedException("Not your post");
