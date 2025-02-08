@@ -23,7 +23,6 @@ import static org.study.learning_mate.global.ErrorType.INVALID_INPUT_VALUE;
 @Slf4j
 @Tag(name = "Reissue API", description = "Reissue API")
 @RestController
-@ResponseBody
 public class ReissueController {
 
     private static final Long accessTokenExpireTime = 86400000L;

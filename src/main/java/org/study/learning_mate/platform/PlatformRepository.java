@@ -1,0 +1,9 @@
+package org.study.learning_mate.platform;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface PlatformRepository extends JpaRepository<Platform, Long> {
+    Platform findByUrlPrefix(String urlPrefix);
+}

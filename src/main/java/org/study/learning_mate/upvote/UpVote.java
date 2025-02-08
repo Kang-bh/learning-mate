@@ -2,10 +2,12 @@ package org.study.learning_mate.upvote;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.study.learning_mate.lecture.Lecture;
+import org.study.learning_mate.post.Post;
 import org.study.learning_mate.user.User;
 
 import java.util.Date;
@@ -30,14 +32,19 @@ public class UpVote {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lecture_id")
-    private Lecture lecture;
+    @JoinColumn(name = "post_id")
+    private Post post;
 
     @Column(name="title", nullable = false)
     private String title;
 
     @Column(columnDefinition = "TEXT", name = "reason")
     private String reason;
+
+    @Column(name="like_count", nullable = false)
+    @ColumnDefault("0")
+    @Builder.Default()
+    private Long likeCount = 0L;
 
     @Column(name = "created_at")
     @CreatedDate

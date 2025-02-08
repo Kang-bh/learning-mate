@@ -7,6 +7,8 @@ import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.study.learning_mate.platform.Platform;
+import org.study.learning_mate.post.Post;
 
 import java.util.Date;
 
@@ -25,13 +27,9 @@ public class Lecture {
     @Column(name="id", nullable = false)
     private Long id;
 
-    @Column(name="title", nullable = false)
-    private String title;
-
-    @Column(name = "upvote_counts", nullable = false)
-    @ColumnDefault("0")
-    @Builder.Default()
-    private Long likeCounts = 0L;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="post_id", nullable = false)
+    private Post post;
 
     @Column(name = "downvote_counts", nullable = false)
     @ColumnDefault("0")
@@ -40,6 +38,10 @@ public class Lecture {
 
     @Column(name="url", nullable = false)
     private String url;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="platform_id")
+    private Platform platform;
 
     @Column(name = "created_at")
     @CreatedDate

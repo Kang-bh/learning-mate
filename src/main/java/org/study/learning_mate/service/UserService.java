@@ -28,4 +28,13 @@ public class UserService {
 
         return userMapper.toUserInfo(userEntity);
     }
+
+    public User findUserById(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            throw new NoSuchElementException("unregistered user");
+        });
+
+        return user;
+    }
+
 }

@@ -1,0 +1,88 @@
+package org.study.learning_mate.controller;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+import org.study.learning_mate.SuccessResponse;
+import org.study.learning_mate.demandlecture.DemandLectureService;
+import org.study.learning_mate.dto.CustomUserDetails;
+import org.study.learning_mate.dto.DemandLectureDTO;
+import org.study.learning_mate.service.UserService;
+import org.study.learning_mate.user.User;
+
+import java.nio.file.AccessDeniedException;
+import java.util.List;
+
+@Tag(name = "날.강.도. API", description = "날.강.도. API")
+@RestController
+public class DemandLectureController {
+
+    private final DemandLectureService demandLectureService;
+    private final UserService userService;
+
+    public DemandLectureController(DemandLectureService demandLectureService, UserService userService) {
+        this.demandLectureService = demandLectureService;
+        this.userService = userService;
+    }
+
+    @Operation(summary = "날.강.도. 게시글 조회", description = "날.강.도. 게시글을 조회합니다.")
+    @GetMapping("/demand-lectures")
+    public SuccessResponse<List<DemandLectureDTO.DemandLectureResponse>> getDemandLectures(Pageable pageable) {
+        List<DemandLectureDTO.DemandLectureResponse> result = demandLectureService.findAllDemandLectureList(pageable);
+        return SuccessResponse.success(result);
+    }
+
+    @Operation(summary = "날.강.도. 게시글 조회", description = "날.강.도. 게시글을 조회합니다.")
+    @Parameters({
+            @Parameter(name = "demandLectureId", description = "날.강.도 게시글 식별자", required = true),
+    })
+    @GetMapping("/demand-lectures/{demandLectureId}")
+    public SuccessResponse<DemandLectureDTO.DemandLectureDetailResponse> getDemandLectureDetail(@PathVariable(value="demandLectureId") Long demandLectureId) {
+        DemandLectureDTO.DemandLectureDetailResponse result = demandLectureService.findDemandLectureById(demandLectureId);
+        return SuccessResponse.success(result);
+
+    }
+
+    @PostMapping("/demand-lectures")
+    public SuccessResponse<?> createDemandLecture(
+            @RequestBody(required = true) DemandLectureDTO.createDemandLectureRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+        ) {
+        Long userId = userDetails.getId();
+        User user = userService.findUserById(userId);
+        demandLectureService.createDemandLecture(request, user);
+
+        return SuccessResponse.success("SUCCESS");
+    }
+
+    @Parameters({
+            @Parameter(name = "demandLectureId", description = "날.강.도. 게시글 식별자", required = true),
+    })
+    @PutMapping("/demand-lectures/{demandLectureId}")
+    public SuccessResponse<DemandLectureDTO.DemandLectureDetailResponse> updateDemandLecture(
+            @RequestBody(required = true) DemandLectureDTO.updateDemandLectureRequest request,
+            @PathVariable Long demandLectureId,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+     ) {
+        Long userId = userDetails.getId();
+        User user = userService.findUserById(userId);
+        DemandLectureDTO.DemandLectureDetailResponse result = demandLectureService.updateDemandLecture(request, user, demandLectureId);
+        return SuccessResponse.success(result);
+    }
+
+    @Parameters({
+            @Parameter(name = "demandLectureId", description = "날.강.도. 게시글 식별자", required = true),
+    })
+    @DeleteMapping("/demand-lectures/{demandLectureId}")
+    public SuccessResponse<?> deleteDemandLecture(@PathVariable Long demandLectureId, @AuthenticationPrincipal CustomUserDetails userDetails) throws AccessDeniedException {
+        Long userId = userDetails.getId();
+        User user = userService.findUserById(userId);
+        demandLectureService.deleteDemandLectureById(demandLectureId, user);
+        return SuccessResponse.success(204, "DELETE SUCCESS");
+    }
+
+}

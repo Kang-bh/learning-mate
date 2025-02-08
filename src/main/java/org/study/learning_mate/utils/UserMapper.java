@@ -16,4 +16,12 @@ public class UserMapper {
                 .role(user.getRole().toString())
                 .build();
     }
+
+    public UserDTO.UserProfile toUserProfile(User user) {
+        return UserDTO.UserProfile.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .profileImage(user.getProfileImage())
+                .build();
+    }
 }

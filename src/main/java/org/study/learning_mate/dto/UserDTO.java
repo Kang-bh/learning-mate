@@ -17,6 +17,16 @@ public class UserDTO {
         private String name;
     }
 
+
+    @Getter
+    @Setter
+    @Builder
+    public static class UserProfile {
+        private Long id;
+        private String name;
+        private String profileImage;
+    }
+
     @Getter
     @Setter
 //    @Builder
