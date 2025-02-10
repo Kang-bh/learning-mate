@@ -1,6 +1,9 @@
 package org.study.learning_mate.controller;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,6 +38,10 @@ public class ReissueController {
         this.refreshTokenRepository = refreshTokenRepository;
     }
 
+    @Parameters({
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
+            @Parameter(in = ParameterIn.COOKIE, name = "Cookie", required = true),
+    })
     @PostMapping("/re-issue")
     public SuccessResponse<?> reissue(HttpServletRequest request, HttpServletResponse response) throws ErrorResponse {
         log.info("Reissue request received");

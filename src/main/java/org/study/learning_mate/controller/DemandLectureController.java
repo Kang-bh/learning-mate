@@ -3,6 +3,7 @@ package org.study.learning_mate.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -52,6 +53,9 @@ public class DemandLectureController {
     }
 
     @PostMapping("/demand-lectures")
+    @Parameters({
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
+    })
     public SuccessResponse<?> createDemandLecture(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "날.강.도. 생성 객체",
@@ -72,6 +76,7 @@ public class DemandLectureController {
     }
 
     @Parameters({
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
             @Parameter(name = "demandLectureId", description = "날.강.도. 게시글 식별자", required = true),
     })
     @PutMapping("/demand-lectures/{demandLectureId}")
@@ -95,6 +100,7 @@ public class DemandLectureController {
     }
 
     @Parameters({
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
             @Parameter(name = "demandLectureId", description = "날.강.도. 게시글 식별자", required = true),
     })
     @DeleteMapping("/demand-lectures/{demandLectureId}")

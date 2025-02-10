@@ -3,6 +3,8 @@ package org.study.learning_mate.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +27,10 @@ public class UserController {
     }
 
     @Operation(summary = "유저정보 조회", description = "유저 식별값을 통해 유저 정보를 조회합니다.")
-    @Parameter(name = "userId", description = "유저 식별값")
+    @Parameters({
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
+            @Parameter(name = "userId", description = "유저 식별값")
+    })
 //    @ApiResponses(value = {
 //            @ApiResponse(responseCode = "200", description = "성공",
 //                    content = @Content(mediaType = "application/json",

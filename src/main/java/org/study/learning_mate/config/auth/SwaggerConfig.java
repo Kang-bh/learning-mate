@@ -2,6 +2,8 @@ package org.study.learning_mate.config.auth;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.annotations.security.OAuthFlow;
 import io.swagger.v3.oas.annotations.security.OAuthFlows;
@@ -35,41 +37,16 @@ public class SwaggerConfig {
 
         return new OpenAPI()
                 .info(getSwaggerInfo())
+                .components(
+                        new Components()
+                                .addSecuritySchemes("accessToken", new io.swagger.v3.oas.models.security.SecurityScheme()
+                                        .name("Authorization")
+                                        .bearerFormat("JWT")
+                                )
+                )
                 .addServersItem(server);
     }
 
-//    @Bean
-//    public OperationCustomizer operationCustomizer() {
-//        return (operation, handlerMethod) -> {
-//            this.addResponseBodyWrapperSchemaExample(operation, SuccessResponse.class, "data");
-//            return operation;
-//        };
-//    }
-//
-//    private void addResponseBodyWrapperSchemaExample(Operation operation, Class<?> type, String wrapFieldName) {
-//        final Content content = operation.getResponses().get("200").getContent();
-//        if (content != null) {
-//            content.keySet()
-//                    .forEach(mediaTypeKey -> {
-//                        final MediaType mediaType = content.get(mediaTypeKey);
-//                        mediaType.schema(wrapSchema(mediaType.getSchema(), type, wrapFieldName));
-//                    });
-//        }
-//    }
-//
-//    @SneakyThrows
-//    private <T> Schema<T> wrapSchema(Schema<?> originalSchema, Class<T> type, String wrapFieldName) {
-//        final Schema<T> wrapperSchema = new Schema<>();
-//        final T instance = type.getDeclaredConstructor().newInstance();
-//
-//        for (Field field : type.getDeclaredFields()) {
-//            field.setAccessible(true);
-//            wrapperSchema.addProperty(field.getName(), new Schema<>().example(field.get(instance)));
-//            field.setAccessible(false);
-//        }
-//        wrapperSchema.addProperty(wrapFieldName, originalSchema);
-//        return wrapperSchema;
-//    }
 
     private Info getSwaggerInfo() {
         License license = new License();

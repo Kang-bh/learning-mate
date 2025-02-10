@@ -2,6 +2,7 @@ package org.study.learning_mate.controller;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -71,6 +72,9 @@ public class LectureController {
     }
 
     @PostMapping("/lectures")
+    @Parameters({
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
+    })
     public SuccessResponse<?> createLecture (
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Lecture 생성 객체",

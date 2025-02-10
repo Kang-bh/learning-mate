@@ -34,8 +34,8 @@ public class UpVoteService {
         return upVoteRepository.findById(upVoteId).orElseThrow(NoSuchElementException::new);
     }
 
-    public List<UpVoteDTO.UpVoteResponse> getUpVotes(Long PostId, Pageable pageable) {
-        Page<UpVote> upVotes = upVoteRepository.findAllByPost_Id(PostId, pageable);
+    public List<UpVoteDTO.UpVoteResponse> getUpVotes(Long postId, Pageable pageable) {
+        Page<UpVote> upVotes = upVoteRepository.findAllByPost_Id(postId, pageable);
         return upVoteMapper.toUpVoteListResponse(upVotes.stream().toList());
     }
 

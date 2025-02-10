@@ -3,6 +3,7 @@ package org.study.learning_mate.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -86,6 +87,7 @@ public class LikeController {
     // 좋아요
     @Operation(summary = "게시글 좋아요", description = "게시글(Lecture, 날강도)에 좋아요를 누릅니다.")
     @Parameters({
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
             @Parameter(name = "postId", description = "게시글 식별값", required = true),
     })
     @PostMapping("/posts/{postId}/like")
@@ -101,6 +103,7 @@ public class LikeController {
 
     @Operation(summary = "추천 좋아요", description = "추천글에 좋아요를 누릅니다.")
     @Parameters({
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
             @Parameter(name = "upVoteId", description = "추천글 식별값", required = true),
     })
     @PostMapping("/up-vote/{upVoteId}/like")
@@ -116,6 +119,7 @@ public class LikeController {
 
     @Operation(summary = "비추천 좋아요", description = "비추천글에 좋아요를 누릅니다.")
     @Parameters({
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
             @Parameter(name = "downVoteId", description = "비추천글 식별값", required = true),
     })
     @PostMapping("/down-vote/{downVoteId}/like")
@@ -133,6 +137,7 @@ public class LikeController {
     // 좋아요 취소
     @Operation(summary = "게시글 좋아요 취소", description = "게시글의 좋아요를 삭제합니다.")
     @Parameters({
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
             @Parameter(name = "postId", description = "게시글 식별값", required = true),
     })
     @DeleteMapping("/posts/{postId}/unlike")
@@ -146,6 +151,7 @@ public class LikeController {
 
     @Operation(summary = "추천글 좋아요 취소", description = "추천글의 좋아요를 삭제합니다.")
     @Parameters({
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
             @Parameter(name = "upVoteId", description = "추천글 식별값", required = true),
     })
     @DeleteMapping("/up-votes/{upVoteId}/unlike")
@@ -159,6 +165,7 @@ public class LikeController {
 
     @Operation(summary = "비추천글 좋아요 취소", description = "비추천글의 좋아요를 삭제합니다.")
     @Parameters({
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
             @Parameter(name = "downVoteId", description = "비추천글 식별값", required = true),
     })
     @DeleteMapping("/down-votes/{downVoteId}/unlike")
