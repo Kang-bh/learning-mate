@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
@@ -49,9 +50,9 @@ public class DemandLectureController {
     public SuccessResponse<DemandLectureDTO.DemandLectureDetailResponse> getDemandLectureDetail(@PathVariable(value="demandLectureId") Long demandLectureId) {
         DemandLectureDTO.DemandLectureDetailResponse result = demandLectureService.findDemandLectureById(demandLectureId);
         return SuccessResponse.success(result);
-
     }
 
+    @Operation(summary = "날.강.도. 게시글 생성", description = "날.강.도. 게시글을 생성합니다.", security = @SecurityRequirement(name = "bearer-key"))
     @PostMapping("/demand-lectures")
     @Parameters({
             @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),

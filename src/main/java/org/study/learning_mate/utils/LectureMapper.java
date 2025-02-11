@@ -22,6 +22,7 @@ public class LectureMapper {
                 .id(lecture.getId())
                 .title(lecture.getPost().getTitle())
                 .url(lecture.getUrl())
+                .description(lecture.getPost().getContent())
                 .likes(lecture.getPost().getLikeCounts())
                 .comments(lecture.getPost().getCommentCount())
                 .dislikes(lecture.getDislikeCounts())

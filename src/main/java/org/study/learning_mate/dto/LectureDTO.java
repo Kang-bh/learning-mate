@@ -13,6 +13,7 @@ public class LectureDTO {
     public static class LectureResponse {
         private Long id;
         private String title;
+        private String description;
         private String url;
         private Long likes;
         private Long dislikes;
