@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -92,11 +93,11 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/", "/health", "/actuator/health", "/join", "/re-issue", "/error", "/logout",
+                        .requestMatchers(HttpMethod.GET, "/login", "/", "/health", "/actuator/health", "/join", "/re-issue", "/error", "/logout",
                                 "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**",
                                 "/css/**", "/js/**", "/images/**", "/resources/**", "/static/**",
-                                "/platforms", "/lectures", "/"
-                                ).permitAll()
+                                "/platforms", "/lectures", "/demand-lectures")
+                        .permitAll()
                         .anyRequest().authenticated()
                 );
 
