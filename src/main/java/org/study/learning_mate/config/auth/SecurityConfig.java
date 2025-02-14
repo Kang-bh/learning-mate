@@ -99,6 +99,8 @@ public class SecurityConfig {
                                 "/platforms", "/lectures", "/demand-lectures", "/posts/{postId}/*"
                                 )
                         .permitAll()
+                        .requestMatchers(HttpMethod.POST, "/re-issue")
+                        .permitAll()
                         .anyRequest().authenticated()
                 );
 
