@@ -36,13 +36,13 @@ public class CommentService {
         return commentMapper.toCommentListDTO(comments);
     }
 
-    public void createComment(String content, Long postId, User user) {
+    public void createComment(CommentDTO.CommentRequest content, Long postId, User user) {
         Post post = postRepository.findById(postId).orElseThrow(NoSuchElementException::new);
 
         Comment comment = Comment.builder()
                 .user(user)
                 .post(post)
-                .content(content)
+                .content(content.getContent())
                 .build();
 
         commentRepository.save(comment);

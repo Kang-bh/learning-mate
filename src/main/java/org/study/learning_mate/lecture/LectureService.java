@@ -13,6 +13,7 @@ import org.study.learning_mate.platform.PlatformTypeManager.PlatformType;
 import org.study.learning_mate.post.Post;
 import org.study.learning_mate.post.PostRepository;
 import org.study.learning_mate.service.CrawlService;
+//import org.study.learning_mate.service.TextSummarizerService;
 import org.study.learning_mate.utils.LectureMapper;
 
 import javax.management.InstanceAlreadyExistsException;
@@ -29,6 +30,7 @@ public class LectureService {
     private final PostRepository postRepository;
     private final CrawlService crawlService;
     private final PlatformRepository platformRepository;
+//    private final TextSummarizerService textSummarizerService;
 
     public LectureService(
             LectureRepository lectureRepository,
@@ -36,12 +38,14 @@ public class LectureService {
             PostRepository postRepository,
             CrawlService crawlService,
             PlatformRepository platformRepository
+//            TextSummarizerService textSummarizerService
     ) {
         this.lectureRepository = lectureRepository;
         this.lectureMapper = lectureMapper;
         this.postRepository = postRepository;
         this.crawlService = crawlService;
         this.platformRepository = platformRepository;
+//        this.textSummarizerService = textSummarizerService;
     }
 
     // overloading
@@ -91,6 +95,9 @@ public class LectureService {
         String title = crawlService.crawlLectureTitle(url);
         Boolean isExist = postRepository.existsByTitle(title);
 
+//        String description = textSummarizerService.summarize(url);
+//        System.out.println("description = " + description);
+
 
         // TODO : ALREADY EXIST ERROR
 //        if (isExist) {
@@ -105,7 +112,7 @@ public class LectureService {
 
         Post post = Post.builder()
                 .title(title)
-                .content("temp") // todo : summarize with ai
+                .content("description") // todo : summarize with ai
                 .postType(LECTURE)
                 .build();
 
@@ -115,7 +122,6 @@ public class LectureService {
                 .url(url)
                 .post(post)
                 .platform(platform)
-//                .platform("")
                 .build();
 
         lectureRepository.save(lecture);

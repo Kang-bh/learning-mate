@@ -59,11 +59,13 @@ public class CommentController {
                             schema = @Schema(implementation = CommentDTO.CommentRequest.class)
                     )
             )
-            @RequestBody String content,
+            @RequestBody CommentDTO.CommentRequest content,
             @PathVariable Long postId,
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
+        System.out.println(11);
         User user = userService.findUserById(userDetails.getId());
+        System.out.println(22);
         commentService.createComment(content, postId, user);
         return SuccessResponse.success(201, "SUCCESS");
     }
