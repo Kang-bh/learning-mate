@@ -96,7 +96,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/login", "/", "/health", "/actuator/health", "/join", "/re-issue", "/error", "/logout",
                                 "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**",
                                 "/css/**", "/js/**", "/images/**", "/resources/**", "/static/**",
-                                "/platforms", "/lectures", "/demand-lectures")
+                                "/platforms", "/lectures", "/demand-lectures", "/posts/{postId}/*"
+                                )
                         .permitAll()
                         .anyRequest().authenticated()
                 );

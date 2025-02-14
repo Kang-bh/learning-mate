@@ -27,10 +27,6 @@ public class Lecture {
     @Column(name="id", nullable = false)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="post_id", nullable = false)
-    private Post post;
-
     @Column(name = "downvote_counts", nullable = false)
     @ColumnDefault("0")
     @Builder.Default()
@@ -50,4 +46,9 @@ public class Lecture {
     @Column(name = "updated_at")
     @LastModifiedDate
     private Date updatedAt;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "id")
+    private Post post;
 }

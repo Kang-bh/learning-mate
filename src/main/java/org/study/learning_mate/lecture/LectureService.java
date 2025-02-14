@@ -5,6 +5,7 @@ import org.hibernate.persister.entity.UniqueKeyEntry;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.study.learning_mate.dto.BookmarkDTO;
 import org.study.learning_mate.dto.LectureDTO;
 import org.study.learning_mate.platform.Platform;
 import org.study.learning_mate.platform.PlatformRepository;
@@ -122,12 +123,8 @@ public class LectureService {
         return;
     }
 
-    private List<Long> extractIds(List<Lecture> lectures) {
-        List<Long> ids = new ArrayList<>();
-        for (Lecture entity : lectures) {
-            ids.add(entity.getId());
-        }
-
-        return ids;
+    public List<LectureDTO.LectureResponse> findByLectureIds (List<Long> bookmarkIds) {
+        List<Lecture> result = lectureRepository.findAllById(bookmarkIds);;
+        return lectureMapper.toLectureResponseDTOList(result);
     }
 }

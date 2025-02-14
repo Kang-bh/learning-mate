@@ -47,6 +47,7 @@ public class LikeController {
 
     @Operation(summary = "게시글 like 조회", description = "Lecture, 날강도 글에 좋아요를 눌렀는 지 조회합니다.")
     @Parameters({
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
             @Parameter(name = "postId", description = "게시글 식별값", required = true),
     })
     @GetMapping("/posts/{postId}/exists")
@@ -60,6 +61,7 @@ public class LikeController {
 
     @Operation(summary = "추천 글 like 조회", description = "추천글에 좋아요를 눌렀는 지 조회합니다.")
     @Parameters({
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
             @Parameter(name = "upVoteId", description = "추천글 식별값", required = true),
     })
     @GetMapping("/up-votes/{upVoteId}/exists")
@@ -73,6 +75,7 @@ public class LikeController {
 
     @Operation(summary = "비추천 글 like 조회", description = "비추천글에 좋아요를 눌렀는 지 조회합니다.")
     @Parameters({
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
             @Parameter(name = "downVoteId", description = "비추천글 식별값", required = true),
     })
     @GetMapping("/down-votes/{downVoteId}/exists")

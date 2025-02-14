@@ -7,6 +7,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.study.learning_mate.lecture.Lecture;
 
 import java.time.LocalDateTime;
 
@@ -62,4 +63,7 @@ public class Post {
     @Column(name= "updated_at")
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    private Lecture lecture;
 }

@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -12,6 +14,7 @@ import org.study.learning_mate.SuccessResponse;
 import org.study.learning_mate.downvote.DownVoteService;
 import org.study.learning_mate.dto.CustomUserDetails;
 import org.study.learning_mate.dto.DownVoteDTO;
+import org.study.learning_mate.dto.LectureDTO;
 import org.study.learning_mate.service.UserService;
 import org.study.learning_mate.user.User;
 import org.study.learning_mate.utils.DownVoteMapper;
@@ -52,6 +55,14 @@ public class DownVoteController {
     @PostMapping("/posts/{postId}/down-votes")
     public SuccessResponse<?> createDownVote(
             @PathVariable Long postId,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "DownVote 생성 객체",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = DownVoteDTO.DownVoteRequest.class)
+                    )
+            )
             @RequestBody DownVoteDTO.DownVoteRequest request,
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
@@ -66,7 +77,17 @@ public class DownVoteController {
             @Parameter(name = "downVoteId", description = "비추천 게시글 식별자", required = true),
     })
     @PutMapping("/down-votes/{downVoteId}")
-    public SuccessResponse<DownVoteDTO.DownVoteResponse> updateDownVote(@PathVariable Long downVoteId, @RequestBody DownVoteDTO.DownVoteRequest request) {
+    public SuccessResponse<DownVoteDTO.DownVoteResponse> updateDownVote(
+            @PathVariable Long downVoteId,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "DownVOte 생성 객체",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = DownVoteDTO.DownVoteRequest.class)
+                    )
+            )
+            @RequestBody DownVoteDTO.DownVoteRequest request) {
         DownVoteDTO.DownVoteResponse result = downVoteService.updateDownVote(downVoteId, request);
         return SuccessResponse.success(result);
     }
