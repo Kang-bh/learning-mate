@@ -27,6 +27,7 @@ public class JoinService {
 
     public UserDTO.Info join(UserDTO.Join joinDTO) throws Exception {
 
+        String name = joinDTO.getName();
         String password = joinDTO.getPassword();
         String email = joinDTO.getEmail();
 
@@ -41,6 +42,7 @@ public class JoinService {
 
         User user = User.builder()
                 .password(encryptedPassword)
+                .name(name)
                 .email(email)
                 .role(Role.USER)
                 .build();

@@ -1,5 +1,7 @@
 package org.study.learning_mate.utils;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
 import org.study.learning_mate.dto.LectureDTO;
 import org.study.learning_mate.lecture.Lecture;
@@ -7,6 +9,7 @@ import org.study.learning_mate.post.Post;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class LectureMapper {
@@ -31,13 +34,21 @@ public class LectureMapper {
                 .build();
     }
 
-    public List<LectureDTO.LectureResponse> toLectureResponseDTOList(List<Lecture> lectures) {
-        List<LectureDTO.LectureResponse> responses = new ArrayList<>();
+    public Page<LectureDTO.LectureResponse> toLectureResponseDTOPage(Page<Lecture> lecturePage) {
+        List<LectureDTO.LectureResponse> responses = lecturePage.getContent().stream()
+                .map(this::toLectureResponseDTO)
+                .collect(Collectors.toList());
 
-        for (Lecture lecture : lectures) {
-            responses.add(toLectureResponseDTO(lecture));
+        return new PageImpl<>(responses, lecturePage.getPageable(), lecturePage.getTotalElements());
+    }
+
+    public List<LectureDTO.LectureResponse> toLectureResponseDTOList(List<Lecture> lectureList) {
+        List<LectureDTO.LectureResponse> result = new ArrayList<>();
+        for (Lecture lecture : lectureList) {
+            result.add(toLectureResponseDTO(lecture));
         }
 
-        return responses;
+        return result;
     }
+
 }

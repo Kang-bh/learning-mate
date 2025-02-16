@@ -1,5 +1,6 @@
 package org.study.learning_mate.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.study.learning_mate.user.User;
 import org.study.learning_mate.UserRepository;
@@ -35,6 +36,19 @@ public class UserService {
         });
 
         return user;
+    }
+
+    @Transactional
+    public UserDTO.updateUser updateUser(Long userId, UserDTO.updateUser info) {
+        User user = userRepository.findById(userId).orElseThrow(NoSuchElementException::new);
+
+        user.setName(info.getName());
+        user.setEmail(info.getEmail());
+        user.setBackgroundImage(info.getBackGroundImage());
+        user.setProfileImage(info.getProfileImage());
+
+        User savedUser = userRepository.save(user);
+        return userMapper.toUserTempInfo(savedUser);
     }
 
 }

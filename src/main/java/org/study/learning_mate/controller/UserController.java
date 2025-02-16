@@ -6,11 +6,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 import org.study.learning_mate.SuccessResponse;
+import org.study.learning_mate.dto.CustomUserDetails;
 import org.study.learning_mate.dto.UserDTO;
 import org.study.learning_mate.service.UserService;
 
@@ -45,5 +44,14 @@ public class UserController {
         UserDTO.Info result = userService.findUserInfoById(userId);
 
         return SuccessResponse.success(result);
+    }
+
+    @PutMapping("/my")
+    public SuccessResponse<UserDTO.updateUser> updateUserInfo(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestBody UserDTO.updateUser info
+    ) {
+        UserDTO.updateUser user = userService.updateUser(customUserDetails.getId(), info);
+        return SuccessResponse.success(user);
     }
 }

@@ -49,36 +49,36 @@ public class LectureService {
     }
 
     // overloading
-    public List<LectureDTO.LectureResponse> getLectures(
+    public Page<LectureDTO.LectureResponse> getLectures(
         Pageable pageable
     ) {
         Page<Lecture> lectures = lectureRepository.findAll(pageable);
-        return lectureMapper.toLectureResponseDTOList(lectures.stream().toList());
+        return lectureMapper.toLectureResponseDTOPage(lectures);
     }
 
-    public List<LectureDTO.LectureResponse> getLectures(
+    public Page<LectureDTO.LectureResponse> getLectures(
             String title,
             Pageable pageable
     ) {
         Page<Lecture> lectures = lectureRepository.findAllByPost_TitleContaining(title, pageable);
-        return lectureMapper.toLectureResponseDTOList(lectures.stream().toList());
+        return lectureMapper.toLectureResponseDTOPage(lectures);
     }
 
-    public List<LectureDTO.LectureResponse> getLectures(
+    public Page<LectureDTO.LectureResponse> getLectures(
             PlatformType platform, // enum처리 필수
             Pageable pageable
     ) {
         Page<Lecture> lectures = lectureRepository.findAllByPlatform(platform, pageable);
-        return lectureMapper.toLectureResponseDTOList(lectures.stream().toList());
+        return lectureMapper.toLectureResponseDTOPage(lectures);
     }
 
-    public List<LectureDTO.LectureResponse> getLectures(
+    public Page<LectureDTO.LectureResponse> getLectures(
             String title,
             PlatformType platform,
             Pageable pageable
     ) {
         Page<Lecture> lectures = lectureRepository.findAllByPost_TitleContainingAndPlatform(title, platform, pageable);
-        return lectureMapper.toLectureResponseDTOList(lectures.stream().toList());
+        return lectureMapper.toLectureResponseDTOPage(lectures);
     }
 
     // todo :
@@ -93,6 +93,8 @@ public class LectureService {
         System.out.println("platform = " + platform);
 
         String title = crawlService.crawlLectureTitle(url);
+        System.out.println("title = " + title);
+
         Boolean isExist = postRepository.existsByTitle(title);
 
 //        String description = textSummarizerService.summarize(url);

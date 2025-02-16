@@ -82,7 +82,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
-        log.info("successfulAuthentication2");
+
         String role = auth.getAuthority();
         System.out.println("role " + role);
 
@@ -95,6 +95,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         Map<String, String> data = new HashMap<>();
         data.put("accessToken", accessToken);
 
+        // why need,,?
+        data.put("name", customUserDetails.getUsername());
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -105,7 +107,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         for (String headerName : response.getHeaderNames()) {
             log.info("응답 헤더 - {}: {}", headerName, response.getHeaders(headerName));
         }
-        // SuceessResponse로 성공 응답 생성
+
         SuccessResponse<Map<String, String>> baseResponse = SuccessResponse.success(data);
 
         // JSON 응답 전송

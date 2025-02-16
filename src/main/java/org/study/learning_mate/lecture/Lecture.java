@@ -49,6 +49,6 @@ public class Lecture {
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "post_id")
     private Post post;
 }

@@ -7,6 +7,7 @@ import lombok.*;
 
 public class UserDTO {
 
+    // todo : Info update User 통합
     @Getter
     @AllArgsConstructor
     @Builder
@@ -21,6 +22,16 @@ public class UserDTO {
     @Getter
     @Setter
     @Builder
+    public static class updateUser {
+        private String name;
+        private String profileImage;
+        private String backGroundImage;
+        private String email;
+    }
+
+    @Getter
+    @Setter
+    @Builder
     public static class UserProfile {
         private Long id;
         private String name;
@@ -31,14 +42,17 @@ public class UserDTO {
     @Setter
 //    @Builder
     public static class Join {
+        private String name;
         private final String email;
         private String password;
 
         @JsonCreator
         public Join(
+                @JsonProperty("name") String name,
                 @JsonProperty("email") String email,
                 @JsonProperty("password") String password
         ) {
+            this.name = name;
             this.password = password;
             this.email = email;
         }

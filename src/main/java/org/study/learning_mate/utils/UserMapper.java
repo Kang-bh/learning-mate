@@ -24,4 +24,13 @@ public class UserMapper {
                 .profileImage(user.getProfileImage())
                 .build();
     }
+
+    public UserDTO.updateUser toUserTempInfo(User user) {
+        return UserDTO.updateUser.builder()
+                .name(user.getName())
+                .email(user.getEmail())
+                .backGroundImage(user.getBackgroundImage())
+                .profileImage(user.getProfileImage())
+                .build();
+    }
 }

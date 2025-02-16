@@ -1,5 +1,7 @@
 package org.study.learning_mate.comment;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.study.learning_mate.dto.CommentDTO;
 import org.study.learning_mate.post.Post;
@@ -30,13 +32,13 @@ public class CommentService {
         this.postRepository = postRepository;
     }
 
-    public List<CommentDTO.CommentResponse> findAllCommentByPostId(Long postId) {
-        List<Comment> comments = commentRepository.findAllByPost_Id(postId);
+    public Page<CommentDTO.CommentResponse> findAllCommentByPostId(Long postId, Pageable pageable) {
+        Page<Comment> comments = commentRepository.findAllByPost_Id(postId, pageable);
 
-        return commentMapper.toCommentListDTO(comments);
+        return commentMapper.toCommentPageDTO(comments);
     }
 
-    public void createComment(CommentDTO.CommentRequest content, Long postId, User user) {
+    public CommentDTO.CommentResponse createComment(CommentDTO.CommentRequest content, Long postId, User user) {
         Post post = postRepository.findById(postId).orElseThrow(NoSuchElementException::new);
 
         Comment comment = Comment.builder()
@@ -45,8 +47,8 @@ public class CommentService {
                 .content(content.getContent())
                 .build();
 
-        commentRepository.save(comment);
-        return;
+        Comment savedComment = commentRepository.save(comment);
+        return commentMapper.toCommentDTO(savedComment);
     }
 
     public CommentDTO.CommentResponse updateComment(String newContent, Long commentId) {
