@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.study.learning_mate.global.ErrorResponse;
 import org.study.learning_mate.user.User;
 import org.study.learning_mate.UserRepository;
 import org.study.learning_mate.dto.CustomUserDetails;
@@ -73,10 +74,10 @@ public class JWTFilter extends OncePerRequestFilter {
         CustomUserDetails customUserDetails = new CustomUserDetails(user);
 
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
-        System.out.println("authToken : " + authToken);
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
-        System.out.println("dofilter");
         return;
-    }}
+    }
+
+}

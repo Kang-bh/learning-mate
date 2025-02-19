@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ErrorResponse extends Throwable {
+public class ErrorResponse extends RuntimeException {
 
     private String message;
     private ErrorCode code;
@@ -29,4 +29,5 @@ public class ErrorResponse extends Throwable {
     public static ErrorResponse of(final ErrorType code, final String message) {
         return new ErrorResponse(code, message);
     }
+
 }

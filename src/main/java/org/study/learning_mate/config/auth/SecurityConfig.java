@@ -1,6 +1,7 @@
 package org.study.learning_mate.config.auth;
 
 
+import jakarta.servlet.Filter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +24,8 @@ import org.study.learning_mate.RefreshTokenRepository;
 import org.study.learning_mate.UserRepository;
 import org.study.learning_mate.config.auth.jwt.JWTFilter;
 import org.study.learning_mate.config.auth.jwt.JWTUtil;
+import org.study.learning_mate.global.ErrorResponse;
+import org.study.learning_mate.global.SecurityGlobalExceptionHandler;
 
 import java.util.Collections;
 
@@ -62,7 +65,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, UserRepository userRepository) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, UserRepository userRepository) throws Exception, ErrorResponse {
 
         http
                 .cors((corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
@@ -103,6 +106,8 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest().authenticated()
                 );
+        http
+                .addFilterBefore(new SecurityGlobalExceptionHandler(), UsernamePasswordAuthenticationFilter.class);
 
         http
                 .addFilterBefore(new JWTFilter(jwtUtil, userRepository), LoginFilter.class);
