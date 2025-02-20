@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.study.learning_mate.SuccessResponse;
@@ -36,8 +38,13 @@ public class DemandLectureController {
     }
 
     @Operation(summary = "날.강.도. 게시글 조회", description = "날.강.도. 게시글을 조회합니다.")
+    @Parameters({
+            @Parameter(name = "sort", description = "정렬 순서", required = false, example = "demandLecturePK.post.id,asc"),
+            @Parameter(name = "page", description = "페이지 수", required = false, example = "0"),
+            @Parameter(name = "size", description = "크기", required = false, example = "10"),
+    })
     @GetMapping("/demand-lectures")
-    public SuccessResponse<List<DemandLectureDTO.DemandLectureResponse>> getDemandLectures(@ParameterObject Pageable pageable) {
+    public SuccessResponse<List<DemandLectureDTO.DemandLectureResponse>> getDemandLectures(@PageableDefault(size = 10, sort = "demandLecturePK.post.id", direction = Sort.Direction.DESC)  Pageable pageable) {
         List<DemandLectureDTO.DemandLectureResponse> result = demandLectureService.findAllDemandLectureList(pageable);
         return SuccessResponse.success(result);
     }

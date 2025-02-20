@@ -1,5 +1,6 @@
 package org.study.learning_mate.bookmark;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+@Slf4j
 @Service
 public class BookmarkService {
     private BookmarkRepository bookmarkRepository;
@@ -53,8 +55,10 @@ public class BookmarkService {
 
     public void addBookmark(Long postId, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(NoSuchElementException::new);
+        log.info("111");
         Post post = postRepository.findById(postId).orElseThrow(NoSuchElementException::new);
 
+        log.info("222");
         Bookmark bookmark = Bookmark.builder()
                 .user(user)
                 .post(post)
