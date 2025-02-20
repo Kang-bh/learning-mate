@@ -43,7 +43,10 @@ public class LectureController {
     @GetMapping("/lectures")
     @Parameters({
             @Parameter(name = "platform", description = "강의 플랫폼", required = true),
-            @Parameter(name = "title", description = "강의 제목", required = true)
+            @Parameter(name = "title", description = "강의 제목", required = true),
+            @Parameter(name = "sort", description = "정렬 순서", required = false, example = "id,asc"),
+            @Parameter(name = "page", description = "페이지 수", required = false, example = "0"),
+            @Parameter(name = "size", description = "크기", required = false, example = "10"),
     })
     @Operation(summary = "강의 목록 조회", description = "플랫폼과 제목으로 강의를 검색합니다.")
     public PagedSuccessResponse<LectureDTO.LectureResponse> getLectures(
