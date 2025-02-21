@@ -45,11 +45,6 @@ public class Post {
     @Builder.Default()
     private Long commentCount = 0L;
 
-    @Column(name="like_count", nullable = false)
-    @ColumnDefault("0")
-    @Builder.Default()
-    private Long likeCount = 0L;
-
     @Column(columnDefinition = "TEXT", name = "content")
     private String content;
 

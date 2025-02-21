@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -45,11 +46,11 @@ public class UpVoteController {
             @Parameter(name = "postId", description = "게시글 식별자", required = true)
     })
     @GetMapping("/posts/{postId}/up-votes")
-    public SuccessResponse<List<UpVoteDTO.UpVoteResponse>> getUpVotes(
+    public SuccessResponse<Page<UpVoteDTO.UpVoteResponse>> getUpVotes(
             @PathVariable Long postId,
             Pageable pageable
     ) {
-        List<UpVoteDTO.UpVoteResponse> result = upVoteService.getUpVotes(postId, pageable);
+        Page<UpVoteDTO.UpVoteResponse> result = upVoteService.getUpVotes(postId, pageable);
         return SuccessResponse.success(result);
     }
 

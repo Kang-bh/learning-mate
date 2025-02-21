@@ -11,6 +11,8 @@ import org.study.learning_mate.SuccessResponse;
 import org.study.learning_mate.downvote.DownVote;
 import org.study.learning_mate.downvote.DownVoteService;
 import org.study.learning_mate.dto.CustomUserDetails;
+import org.study.learning_mate.global.ErrorResponse;
+import org.study.learning_mate.global.ErrorType;
 import org.study.learning_mate.like.LikeService;
 import org.study.learning_mate.post.Post;
 import org.study.learning_mate.post.PostService;
@@ -50,13 +52,13 @@ public class LikeController {
             @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
             @Parameter(name = "postId", description = "게시글 식별값", required = true),
     })
-    @GetMapping("/posts/{postId}/exists")
+    @GetMapping("/posts/{postId}/like/exists")
     public SuccessResponse<?> isExistsLikePost(
             @PathVariable Long postId,
             @AuthenticationPrincipal CustomUserDetails userDetails
         ) {
         Boolean isExist = likeService.checkLikeInPost(postId, userDetails.getId());
-        return SuccessResponse.success(new String[]{"isExist :" + isExist});
+        return SuccessResponse.success(isExist);
     }
 
     @Operation(summary = "추천 글 like 조회", description = "추천글에 좋아요를 눌렀는 지 조회합니다.")
@@ -64,13 +66,13 @@ public class LikeController {
             @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
             @Parameter(name = "upVoteId", description = "추천글 식별값", required = true),
     })
-    @GetMapping("/up-votes/{upVoteId}/exists")
+    @GetMapping("/up-votes/{upVoteId}/like/exists")
     public SuccessResponse<?> isExistsLikeUpVote(
             @PathVariable Long upVoteId,
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         Boolean isExist = likeService.checkLikeInUpVote(upVoteId, userDetails.getId());
-        return SuccessResponse.success(new String[]{"isExist :" + isExist});
+        return SuccessResponse.success(isExist);
     }
 
     @Operation(summary = "비추천 글 like 조회", description = "비추천글에 좋아요를 눌렀는 지 조회합니다.")
@@ -78,13 +80,13 @@ public class LikeController {
             @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
             @Parameter(name = "downVoteId", description = "비추천글 식별값", required = true),
     })
-    @GetMapping("/down-votes/{downVoteId}/exists")
+    @GetMapping("/down-votes/{downVoteId}/like/exists")
     public SuccessResponse<?> isExistsLikeDownVote(
             @PathVariable Long downVoteId,
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         Boolean isExist = likeService.checkLikeInDownVote(downVoteId, userDetails.getId());
-        return SuccessResponse.success(new String[]{"isExist :" + isExist});
+        return SuccessResponse.success(isExist);
     }
 
     // 좋아요
@@ -98,8 +100,13 @@ public class LikeController {
             @PathVariable Long postId,
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
+        Long userId = userDetails.getId();
+        if (likeService.checkLikeInPost(postId, userId)) {
+            throw new ErrorResponse(ErrorType.CONFLICT, "Already Like");
+        }
+
         Post post = postService.findById(postId);
-        User user = userService.findUserById(userDetails.getId());
+        User user = userService.findUserById(userId);
         likeService.createLikeInPost(post, user);
         return SuccessResponse.success(201);
     }
@@ -114,8 +121,13 @@ public class LikeController {
             @PathVariable Long upvoteId,
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
+        Long userId = userDetails.getId();
+        if (likeService.checkLikeInUpVote(upvoteId, userId)) {
+            throw new ErrorResponse(ErrorType.CONFLICT, "Already Like");
+        }
+
         UpVote upVote = upVoteService.getUpVoteById(upvoteId);
-        User user = userService.findUserById(userDetails.getId());
+        User user = userService.findUserById(userId);
         likeService.createLikeInUpVote(upVote, user);
         return SuccessResponse.success(201);
     }
@@ -131,10 +143,15 @@ public class LikeController {
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         // downvote를 여기서 가져와야 할 지
+        Long userId = userDetails.getId();
+        if (likeService.checkLikeInDownVote(downVoteId, userId)) {
+            throw new ErrorResponse(ErrorType.CONFLICT, "Already Like");
+        }
+
         DownVote downVote = downVoteService.getDownVoteById(downVoteId);
-        User user = userService.findUserById(userDetails.getId());
+        User user = userService.findUserById(userId);
         likeService.createLikeInDownVote(downVote, user);
-        return SuccessResponse.success(201);
+        return SuccessResponse.success("CREATED");
     }
 
     // 좋아요 취소

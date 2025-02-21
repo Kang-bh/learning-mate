@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -42,8 +43,8 @@ public class DownVoteController {
             @Parameter(name = "postId", description = "게시글(Lecture, 날.강.도) 식별자", required = true),
     })
     @GetMapping("/posts/{postId}/down-votes")
-    public SuccessResponse<List<DownVoteDTO.DownVoteResponse>> getDownVotes(@PathVariable Long postId, Pageable pageable) {
-        List<DownVoteDTO.DownVoteResponse> result = downVoteService.getDownVotes(postId, pageable);
+    public SuccessResponse<Page<DownVoteDTO.DownVoteResponse>> getDownVotes(@PathVariable Long postId, Pageable pageable) {
+        Page<DownVoteDTO.DownVoteResponse> result = downVoteService.getDownVotes(postId, pageable);
         return SuccessResponse.success(result);
     }
 

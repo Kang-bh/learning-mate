@@ -1,11 +1,15 @@
 package org.study.learning_mate.utils;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
 import org.study.learning_mate.dto.UpVoteDTO;
 import org.study.learning_mate.upvote.UpVote;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class UpVoteMapper {
@@ -34,5 +38,13 @@ public class UpVoteMapper {
         }
 
         return upVoteResponseList;
+    }
+
+    public Page<UpVoteDTO.UpVoteResponse> toUpVotePageResponse(Page<UpVote> upVotePage) {
+        List<UpVoteDTO.UpVoteResponse> responses = upVotePage.getContent().stream()
+                .map(this::toUpVoteResponse)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(responses, upVotePage.getPageable(), upVotePage.getTotalElements());
     }
 }

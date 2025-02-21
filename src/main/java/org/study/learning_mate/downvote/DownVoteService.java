@@ -35,10 +35,10 @@ public class DownVoteService {
     }
 
     // downvote list 조회
-    public List<DownVoteDTO.DownVoteResponse> getDownVotes(Long postId, Pageable pageable) {
+    public Page<DownVoteDTO.DownVoteResponse> getDownVotes(Long postId, Pageable pageable) {
         Page<DownVote> downVotes = downVoteRepository.findAllByPost_Id(postId, pageable);
 
-        return downVoteMapper.toDownVoteListDTO(downVotes.stream().toList());
+        return downVoteMapper.toDownVotePageDTO(downVotes);
     }
 
     // downvote 생성
