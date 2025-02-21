@@ -1,6 +1,7 @@
 package org.study.learning_mate.lecture;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.persister.entity.UniqueKeyEntry;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ import java.util.List;
 
 import static org.study.learning_mate.post.PostType.LECTURE;
 
+@Slf4j
 @Service
 public class LectureService {
 
@@ -132,7 +134,9 @@ public class LectureService {
     }
 
     public List<LectureDTO.LectureResponse> findByLectureIds (List<Long> bookmarkIds) {
-        List<Lecture> result = lectureRepository.findAllById(bookmarkIds);;
+        log.info("bookmark : " + bookmarkIds);
+        List<Lecture> result = lectureRepository.findAllById(bookmarkIds);
+        log.info("result : " + result );
         return lectureMapper.toLectureResponseDTOList(result);
     }
 }

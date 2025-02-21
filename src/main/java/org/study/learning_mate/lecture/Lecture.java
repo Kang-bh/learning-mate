@@ -47,7 +47,7 @@ public class Lecture {
     @LastModifiedDate
     private Date updatedAt;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @MapsId
     @JoinColumn(name = "post_id")
     private Post post;

@@ -38,7 +38,7 @@ public class BookmarkController {
     @Parameters({
             @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
             @Parameter(name = "platform", required = false, description = "플랫폼 이름"),
-            @Parameter(name = "sort", description = "정렬 순서", required = false, example = "demandLecturePK.post.id,asc"),
+            @Parameter(name = "sort", description = "정렬 순서", required = false, example = "id,asc"),
             @Parameter(name = "page", description = "페이지 수", required = false, example = "0"),
             @Parameter(name = "size", description = "크기", required = false, example = "10"),
     })
@@ -46,7 +46,7 @@ public class BookmarkController {
     public SuccessResponse<List<LectureDTO.LectureResponse>> getBookmarkLectures(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam(required = false) String platform,
-            @PageableDefault(size = 10, sort = "demandLecturePK.post.id", direction = Sort.Direction.DESC) Pageable pageable
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         Long userId = userDetails.getId();
         List<Long> bookmarks = new ArrayList<>();

@@ -50,12 +50,13 @@ public class BookmarkService {
             Pageable pageable
     ) {
         Page<Bookmark> result = bookmarkRepository.findByUser_Id(userId, pageable);
+        log.info("result : " + result);
         return extractIds(result.stream().toList());
     }
 
     public void addBookmark(Long postId, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(NoSuchElementException::new);
-        log.info("111");
+        log.info("postId" + postId + "userId" + userId);
         Post post = postRepository.findById(postId).orElseThrow(NoSuchElementException::new);
 
         log.info("222");
@@ -71,7 +72,7 @@ public class BookmarkService {
     private List<Long> extractIds(List<Bookmark> bookmarks) {
         List<Long> ids = new ArrayList<>();
         for (Bookmark entity : bookmarks) {
-            ids.add(entity.getId());
+            ids.add(entity.getPost().getId());
         }
 
         return ids;
