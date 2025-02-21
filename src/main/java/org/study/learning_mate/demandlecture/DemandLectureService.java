@@ -107,4 +107,9 @@ public class DemandLectureService {
         demandLectureRepository.delete(demandLecture);
         postRepository.deleteById(demandLectureId);
     }
-}
+
+    public Page<DemandLectureDTO.DemandLectureDetailResponse> findMyDemandLectureList(Pageable pageable, Long userId) {
+        Page<DemandLecture> demandLectures = demandLectureRepository.findByUserId(userId, pageable);
+
+        return demandLectureMapper.toDemandLectureDetailPageDTO(demandLectures);
+    }}
