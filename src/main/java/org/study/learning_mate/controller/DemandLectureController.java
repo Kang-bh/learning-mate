@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -44,8 +45,8 @@ public class DemandLectureController {
             @Parameter(name = "size", description = "크기", required = false, example = "10"),
     })
     @GetMapping("/demand-lectures")
-    public SuccessResponse<List<DemandLectureDTO.DemandLectureResponse>> getDemandLectures(@PageableDefault(size = 10, sort = "demandLecturePK.post.id", direction = Sort.Direction.DESC)  Pageable pageable) {
-        List<DemandLectureDTO.DemandLectureResponse> result = demandLectureService.findAllDemandLectureList(pageable);
+    public SuccessResponse<Page<DemandLectureDTO.DemandLectureDetailResponse>> getDemandLectures(@PageableDefault(size = 10, sort = "demandLecturePK.post.id", direction = Sort.Direction.DESC)  Pageable pageable) {
+        Page<DemandLectureDTO.DemandLectureDetailResponse> result = demandLectureService.findAllDemandLectureList(pageable);
         return SuccessResponse.success(result);
     }
 

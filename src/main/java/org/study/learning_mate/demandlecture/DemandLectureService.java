@@ -31,10 +31,10 @@ public class DemandLectureService {
         this.postRepository = postRepository;
     }
 
-    public List<DemandLectureDTO.DemandLectureResponse> findAllDemandLectureList(Pageable pageable) {
+    public Page<DemandLectureDTO.DemandLectureDetailResponse> findAllDemandLectureList(Pageable pageable) {
         Page<DemandLecture> demandLectures = demandLectureRepository.findAll(pageable);
 
-        return demandLectureMapper.toDemandLectureListDTO(demandLectures.stream().toList());
+        return demandLectureMapper.toDemandLectureDetailPageDTO(demandLectures);
     }
 
     // 날강도 상세 조회

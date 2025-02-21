@@ -1,5 +1,7 @@
 package org.study.learning_mate.utils;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
 import org.study.learning_mate.demandlecture.DemandLecture;
 import org.study.learning_mate.dto.DemandLectureDTO;
@@ -8,6 +10,7 @@ import org.study.learning_mate.user.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class DemandLectureMapper {
@@ -56,5 +59,13 @@ public class DemandLectureMapper {
                 .updateTime(demandLecture.getUpdatedAt())
                 .user(userMapper.toUserProfile(user))
                 .build();
+    }
+
+    public Page<DemandLectureDTO.DemandLectureDetailResponse> toDemandLectureDetailPageDTO(Page<DemandLecture> demandLecturePage) {
+        List<DemandLectureDTO.DemandLectureDetailResponse> responses = demandLecturePage.getContent().stream()
+                .map(this::toDemandLectureDetailDTO)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(responses, demandLecturePage.getPageable(), demandLecturePage.getTotalElements());
     }
 }
