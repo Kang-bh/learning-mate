@@ -30,20 +30,20 @@ public class Post {
     @Column(name="post_type", nullable = false)
     private PostType postType;
 
-    @Column(name="upvote_count", nullable = false)
+    @Column(name="like_counts", nullable = false)
     @ColumnDefault("0")
     @Builder.Default()
     private Long likeCounts = 0L;
 
-    @Column(name="view_count", nullable = false)
+    @Column(name="view_counts", nullable = false)
     @ColumnDefault("0")
     @Builder.Default()
     private Long viewCounts = 0L;
 
-    @Column(name="comment_count", nullable = false)
+    @Column(name="comment_counts", nullable = false)
     @ColumnDefault("0")
     @Builder.Default()
-    private Long commentCount = 0L;
+    private Long commentCounts = 0L;
 
     @Column(columnDefinition = "TEXT", name = "content")
     private String content;

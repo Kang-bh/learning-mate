@@ -1,6 +1,7 @@
 package org.study.learning_mate.like;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.study.learning_mate.UserRepository;
 import org.study.learning_mate.downvote.DownVote;
@@ -14,6 +15,7 @@ import org.study.learning_mate.user.User;
 
 import java.util.NoSuchElementException;
 
+@Slf4j
 @Service
 public class LikeService {
 
@@ -105,13 +107,19 @@ public class LikeService {
 
     // unlike
     @Transactional
-    public void deleteLikeInPost(Long postId, Long userId) {
+    public void deleteLikeInPost(Long userId, Long postId) {
         // check access
+        if (!likePostRepository.existsByUser_IdAndPost_Id(userId, postId)) {
+            // TODO :: ERROR Reponse 맞춰놓기
+            throw new NoSuchElementException("Not Exist Like in Post");
+        }
         // delete
+        log.info("before delete");
         likePostRepository.deleteByUser_IdAndPost_Id(userId, postId);
-
+        log.info(" deleted");
+        log.info("post ID" + postId);
         Post post = postRepository.findById(postId).orElseThrow(NoSuchElementException::new);
-
+        log.info("post");
         post.setLikeCounts(post.getLikeCounts() - 1);
         postRepository.save(post);
         return;

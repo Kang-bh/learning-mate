@@ -1,5 +1,6 @@
 package org.study.learning_mate.comment;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,7 @@ public class CommentService {
         return commentMapper.toCommentPageDTO(comments);
     }
 
+    @Transactional
     public CommentDTO.CommentResponse createComment(CommentDTO.CommentRequest content, Long postId, User user) {
         Post post = postRepository.findById(postId).orElseThrow(NoSuchElementException::new);
 
@@ -48,6 +50,10 @@ public class CommentService {
                 .build();
 
         Comment savedComment = commentRepository.save(comment);
+
+        post.setCommentCounts(post.getCommentCounts() + 1);
+        postRepository.save(post);
+
         return commentMapper.toCommentDTO(savedComment);
     }
 
@@ -61,6 +67,8 @@ public class CommentService {
         return commentMapper.toCommentDTO(updatedContent);
     }
 
+
+    @Transactional
     public void deleteComment(Long commentId, User user) throws AccessDeniedException {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> {
             throw new NoSuchElementException("No such comment");
@@ -69,6 +77,11 @@ public class CommentService {
         if (comment.getUser().getId() != user.getId()) {
             throw new AccessDeniedException("No Access to Comment");
         }
+
+        Post post = comment.getPost();
+
+        post.setCommentCounts(post.getCommentCounts() - 1);
+        postRepository.save(post);
 
         commentRepository.deleteById(commentId);
         return;

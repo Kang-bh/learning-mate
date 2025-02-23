@@ -45,6 +45,9 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.8.5'
 
+	// jsoup
+	implementation group: 'org.jsoup', name: 'jsoup', version: '1.7.2'
+
 	// selenium
 	implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.27.0'
 

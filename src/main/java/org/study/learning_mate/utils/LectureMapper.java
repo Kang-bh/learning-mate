@@ -27,7 +27,7 @@ public class LectureMapper {
                 .url(lecture.getUrl())
                 .description(lecture.getPost().getContent())
                 .likes(lecture.getPost().getLikeCounts())
-                .comments(lecture.getPost().getCommentCount())
+                .comments(lecture.getPost().getCommentCounts())
                 .dislikes(lecture.getDislikeCounts())
                 .views(lecture.getPost().getViewCounts())
                 .platform(platformMapper.toPlatformDTO(lecture.getPlatform()))

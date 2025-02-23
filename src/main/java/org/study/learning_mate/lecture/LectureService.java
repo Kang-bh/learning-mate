@@ -15,6 +15,7 @@ import org.study.learning_mate.post.Post;
 import org.study.learning_mate.post.PostRepository;
 import org.study.learning_mate.service.CrawlService;
 //import org.study.learning_mate.service.TextSummarizerService;
+//import org.study.learning_mate.service.TextSummarizerService;
 import org.study.learning_mate.utils.LectureMapper;
 
 import javax.management.InstanceAlreadyExistsException;

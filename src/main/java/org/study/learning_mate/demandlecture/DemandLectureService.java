@@ -1,6 +1,7 @@
 package org.study.learning_mate.demandlecture;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+@Slf4j
 @Service
 public class DemandLectureService {
 
@@ -99,13 +101,15 @@ public class DemandLectureService {
     public void deleteDemandLectureById(Long demandLectureId, User user ) throws AccessDeniedException {
         // check 권한
         DemandLecture demandLecture = demandLectureRepository.findByPostId(demandLectureId);
+        log.info("11");
 
         if (user.getId() != demandLecture.getDemandLecturePK().getUser().getId()) {
             throw new AccessDeniedException("Not your post");
         }
+        log.info("22");
 
-        demandLectureRepository.delete(demandLecture);
-        postRepository.deleteById(demandLectureId);
+        demandLectureRepository.delete(demandLecture); // TODO :: DB 연관성 고려
+//        postRepository.deleteById(demandLectureId);
     }
 
     public Page<DemandLectureDTO.DemandLectureDetailResponse> findMyDemandLectureList(Pageable pageable, Long userId) {
