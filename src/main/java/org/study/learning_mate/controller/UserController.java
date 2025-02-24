@@ -54,4 +54,12 @@ public class UserController {
         UserDTO.updateUser user = userService.updateUser(customUserDetails.getId(), info);
         return SuccessResponse.success(user);
     }
+
+    @GetMapping("/my")
+    public SuccessResponse<UserDTO.Info> findMyUserInfo(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ) {
+        UserDTO.Info result = userService.findUserInfoById(customUserDetails.getId());
+        return SuccessResponse.success(result);
+    }
 }

@@ -13,9 +13,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.study.learning_mate.SuccessResponse;
+import org.study.learning_mate.demandlecture.DemandLecture;
 import org.study.learning_mate.demandlecture.DemandLectureService;
 import org.study.learning_mate.dto.CommentDTO;
 import org.study.learning_mate.dto.CustomUserDetails;
@@ -25,6 +27,7 @@ import org.study.learning_mate.user.User;
 
 import java.nio.file.AccessDeniedException;
 import java.util.List;
+import java.util.Map;
 
 @Tag(name = "날.강.도. API", description = "날.강.도. API")
 @RestController
@@ -65,7 +68,7 @@ public class DemandLectureController {
     @Parameters({
             @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
     })
-    public SuccessResponse<?> createDemandLecture(
+    public ResponseEntity<SuccessResponse<DemandLectureDTO.DemandLectureDetailResponse>> createDemandLecture(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "날.강.도. 생성 객체",
                     required = true,
@@ -79,9 +82,13 @@ public class DemandLectureController {
         ) {
         Long userId = userDetails.getId();
         User user = userService.findUserById(userId);
-        demandLectureService.createDemandLecture(request, user);
+        DemandLectureDTO.DemandLectureDetailResponse result = demandLectureService.createDemandLecture(request, user);
 
-        return SuccessResponse.success("SUCCESS");
+        Map <String, String> headersMap = Map.of(
+                "Location", "/demand-lectures/" + result.getId()
+        );
+
+        return SuccessResponse.successWithHeaders(201, result, headersMap);
     }
 
     @Parameters({

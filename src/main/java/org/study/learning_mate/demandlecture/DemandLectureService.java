@@ -48,7 +48,7 @@ public class DemandLectureService {
 
     // 날강도 생성
     @Transactional
-    public void createDemandLecture(DemandLectureDTO.createDemandLectureRequest request, User user) {
+    public DemandLectureDTO.DemandLectureDetailResponse createDemandLecture(DemandLectureDTO.createDemandLectureRequest request, User user) {
 
         System.out.println("title + " + request.getTitle());
         System.out.println("content + " + request.getContent());
@@ -70,9 +70,9 @@ public class DemandLectureService {
                         .demandLecturePK(demandLecturePK)
                         .build();
 
-        demandLectureRepository.save(demandLecture);
+        DemandLecture savedDemandLecture = demandLectureRepository.save(demandLecture);
 
-        return;
+        return demandLectureMapper.toDemandLectureDetailDTO(savedDemandLecture);
     }
 
     // 날강도 수정
