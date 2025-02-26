@@ -16,6 +16,7 @@ import org.study.learning_mate.post.PostRepository;
 import org.study.learning_mate.service.CrawlService;
 //import org.study.learning_mate.service.TextSummarizerService;
 //import org.study.learning_mate.service.TextSummarizerService;
+import org.study.learning_mate.service.TextSummarizerService;
 import org.study.learning_mate.utils.LectureMapper;
 
 import javax.management.InstanceAlreadyExistsException;
@@ -33,22 +34,22 @@ public class LectureService {
     private final PostRepository postRepository;
     private final CrawlService crawlService;
     private final PlatformRepository platformRepository;
-//    private final TextSummarizerService textSummarizerService;
+    private final TextSummarizerService textSummarizerService;
 
     public LectureService(
             LectureRepository lectureRepository,
             LectureMapper lectureMapper,
             PostRepository postRepository,
             CrawlService crawlService,
-            PlatformRepository platformRepository
-//            TextSummarizerService textSummarizerService
+            PlatformRepository platformRepository,
+            TextSummarizerService textSummarizerService
     ) {
         this.lectureRepository = lectureRepository;
         this.lectureMapper = lectureMapper;
         this.postRepository = postRepository;
         this.crawlService = crawlService;
         this.platformRepository = platformRepository;
-//        this.textSummarizerService = textSummarizerService;
+        this.textSummarizerService = textSummarizerService;
     }
 
     // overloading
@@ -100,8 +101,8 @@ public class LectureService {
 
         Boolean isExist = postRepository.existsByTitle(title);
 
-//        String description = textSummarizerService.summarize(url);
-//        System.out.println("description = " + description);
+        String description = textSummarizerService.summarizeUrl(url);
+        System.out.println("description = " + description);
 
 
         // TODO : ALREADY EXIST ERROR
@@ -117,15 +118,15 @@ public class LectureService {
 
         Post post = Post.builder()
                 .title(title)
-                .content("description") // todo : summarize with ai
+                .content(description) // todo : summarize with ai
                 .postType(LECTURE)
                 .build();
 
-        postRepository.save(post);
+        Post savedPost = postRepository.save(post);
 
         Lecture lecture = Lecture.builder()
                 .url(url)
-                .post(post)
+                .post(savedPost)
                 .platform(platform)
                 .build();
 
