@@ -47,8 +47,8 @@ public class Lecture {
     @LastModifiedDate
     private Date updatedAt;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @MapsId
-    @JoinColumn(name = "post_id")
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "post_id", referencedColumnName = "id")
     private Post post;
 }

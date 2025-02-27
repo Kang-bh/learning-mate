@@ -54,6 +54,7 @@ public class LectureService {
     }
 
     public LectureDTO.LectureResponse getLecture(Long lectureId) {
+        log.info("lectureId" + lectureId);
         Lecture lecture = lectureRepository.findById(lectureId).orElseThrow(NoSuchElementException::new);
         return lectureMapper.toLectureResponseDTO(lecture);
     }

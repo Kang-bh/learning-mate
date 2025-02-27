@@ -99,7 +99,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/login", "/", "/health", "/actuator/health", "/join", "/re-issue", "/error", "/logout",
                                 "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**",
                                 "/css/**", "/js/**", "/images/**", "/resources/**", "/static/**",
-                                "/platforms", "/lectures", "/demand-lectures", "/posts/{postId}/*", "demand-lectures/{demandLectureId}"
+                                "/platforms", "/lectures", "lectures/{lectureId}", "/demand-lectures", "/posts/{postId}/*", "demand-lectures/{demandLectureId}"
                                 )
                         .permitAll()
                         .requestMatchers(HttpMethod.POST, "/re-issue", "/join")
