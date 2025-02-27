@@ -118,15 +118,15 @@ public class LikeController {
     })
     @PostMapping("/up-vote/{upVoteId}/like")
     public SuccessResponse<?> likeUpVote(
-            @PathVariable Long upvoteId,
+            @PathVariable Long upVoteId,
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         Long userId = userDetails.getId();
-        if (likeService.checkLikeInUpVote(upvoteId, userId)) {
+        if (likeService.checkLikeInUpVote(upVoteId, userId)) {
             throw new ErrorResponse(ErrorType.CONFLICT, "Already Like");
         }
 
-        UpVote upVote = upVoteService.getUpVoteById(upvoteId);
+        UpVote upVote = upVoteService.getUpVoteById(upVoteId);
         User user = userService.findUserById(userId);
         likeService.createLikeInUpVote(upVote, user);
         return SuccessResponse.success(201);

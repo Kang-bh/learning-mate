@@ -22,6 +22,7 @@ import org.study.learning_mate.utils.LectureMapper;
 import javax.management.InstanceAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.study.learning_mate.post.PostType.LECTURE;
 
@@ -50,6 +51,11 @@ public class LectureService {
         this.crawlService = crawlService;
         this.platformRepository = platformRepository;
         this.textSummarizerService = textSummarizerService;
+    }
+
+    public LectureDTO.LectureResponse getLecture(Long lectureId) {
+        Lecture lecture = lectureRepository.findById(lectureId).orElseThrow(NoSuchElementException::new);
+        return lectureMapper.toLectureResponseDTO(lecture);
     }
 
     // overloading

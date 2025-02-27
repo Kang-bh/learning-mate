@@ -24,6 +24,7 @@ public class UpVoteMapper {
         return UpVoteDTO.UpVoteResponse.builder()
                 .id(upVote.getId())
                 .user(userMapper.toUserProfile(upVote.getUser()))
+                .likeCount(upVote.getLikeCount())
                 .title(upVote.getTitle())
                 .reason(upVote.getReason())
                 .createTime(upVote.getCreatedAt())

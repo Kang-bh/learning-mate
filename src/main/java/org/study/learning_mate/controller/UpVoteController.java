@@ -18,6 +18,7 @@ import org.study.learning_mate.dto.CustomUserDetails;
 import org.study.learning_mate.dto.DownVoteDTO;
 import org.study.learning_mate.dto.LectureDTO;
 import org.study.learning_mate.dto.UpVoteDTO;
+import org.study.learning_mate.service.RedisService;
 import org.study.learning_mate.service.UserService;
 import org.study.learning_mate.upvote.UpVote;
 import org.study.learning_mate.upvote.UpVoteService;
@@ -35,8 +36,8 @@ public class UpVoteController {
 
     public UpVoteController(
         UpVoteService upVoteService,
-        UserService userService,
-        UserRepository userRepository) {
+        UserService userService
+    ) {
         this.upVoteService = upVoteService;
         this.userService = userService;
     }

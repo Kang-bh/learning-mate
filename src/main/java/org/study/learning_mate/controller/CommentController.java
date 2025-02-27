@@ -87,8 +87,8 @@ public class CommentController {
                             schema = @Schema(implementation = CommentDTO.CommentRequest.class)
                     )
             )
-            @RequestBody String content) {
-        CommentDTO.CommentResponse result = commentService.updateComment(content, commentId);
+            @RequestBody CommentDTO.CommentRequest request) {
+        CommentDTO.CommentResponse result = commentService.updateComment(request.getContent(), commentId);
         return SuccessResponse.success(result);
     }
 

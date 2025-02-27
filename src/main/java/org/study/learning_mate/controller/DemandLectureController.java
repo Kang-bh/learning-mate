@@ -8,7 +8,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,8 +24,11 @@ import org.study.learning_mate.demandlecture.DemandLectureService;
 import org.study.learning_mate.dto.CommentDTO;
 import org.study.learning_mate.dto.CustomUserDetails;
 import org.study.learning_mate.dto.DemandLectureDTO;
+import org.study.learning_mate.post.PostService;
+import org.study.learning_mate.service.RedisService;
 import org.study.learning_mate.service.UserService;
 import org.study.learning_mate.user.User;
+import org.study.learning_mate.utils.IpExtractor;
 
 import java.nio.file.AccessDeniedException;
 import java.util.List;
@@ -35,10 +40,22 @@ public class DemandLectureController {
 
     private final DemandLectureService demandLectureService;
     private final UserService userService;
+    private final RedisService redisService;
+    private final IpExtractor ipExtractor;
+    private final PostService postService;
 
-    public DemandLectureController(DemandLectureService demandLectureService, UserService userService) {
+    public DemandLectureController(
+            DemandLectureService demandLectureService,
+            UserService userService,
+            RedisService redisService,
+            IpExtractor ipExtractor,
+            PostService postService
+        ) {
         this.demandLectureService = demandLectureService;
         this.userService = userService;
+        this.redisService = redisService;
+        this.ipExtractor = ipExtractor;
+        this.postService = postService;
     }
 
     @Operation(summary = "날.강.도. 게시글 조회", description = "날.강.도. 게시글을 조회합니다.")
@@ -58,7 +75,19 @@ public class DemandLectureController {
             @Parameter(name = "demandLectureId", description = "날.강.도 게시글 식별자", required = true),
     })
     @GetMapping("/demand-lectures/{demandLectureId}")
-    public SuccessResponse<DemandLectureDTO.DemandLectureDetailResponse> getDemandLectureDetail(@PathVariable(value="demandLectureId") Long demandLectureId) {
+    public SuccessResponse<DemandLectureDTO.DemandLectureDetailResponse> getDemandLectureDetail(
+            @PathVariable(value="demandLectureId") Long demandLectureId,
+            HttpServletRequest request
+    ) {
+        String ipAddress = ipExtractor.getRemoteAddr(request);
+        String key = ipAddress + "+" + demandLectureId;
+        System.out.println("key " + key);
+        if (!redisService.isExist(key)){
+            // todo : 통신 끊기는 경우 복구처리
+            System.out.println("create key");
+            redisService.setData(key, "1", redisService.getExpireByEnv()); // in prod : 1800000L
+            postService.plusPostViewCount(demandLectureId);
+        }
         DemandLectureDTO.DemandLectureDetailResponse result = demandLectureService.findDemandLectureById(demandLectureId);
         return SuccessResponse.success(result);
     }

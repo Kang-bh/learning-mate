@@ -9,6 +9,7 @@ import org.study.learning_mate.dto.DemandLectureDTO;
 import org.study.learning_mate.post.Post;
 import org.study.learning_mate.post.PostRepository;
 import org.study.learning_mate.post.PostType;
+import org.study.learning_mate.service.RedisService;
 import org.study.learning_mate.user.User;
 import org.study.learning_mate.utils.DemandLectureMapper;
 
@@ -27,7 +28,8 @@ public class DemandLectureService {
     public DemandLectureService(
             DemandLectureRepository demandLectureRepository,
             DemandLectureMapper demandLectureMapper,
-            PostRepository postRepository) {
+            PostRepository postRepository
+    ) {
         this.demandLectureRepository = demandLectureRepository;
         this.demandLectureMapper = demandLectureMapper;
         this.postRepository = postRepository;
@@ -41,6 +43,8 @@ public class DemandLectureService {
 
     // 날강도 상세 조회
     public DemandLectureDTO.DemandLectureDetailResponse findDemandLectureById(Long demandLectureId) {
+
+
         DemandLecture demandLecture = demandLectureRepository.findByPostId(demandLectureId);
 
         return demandLectureMapper.toDemandLectureDetailDTO(demandLecture);

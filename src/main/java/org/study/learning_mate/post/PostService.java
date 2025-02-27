@@ -16,4 +16,10 @@ public class PostService {
     public Post findById(Long postId) {
         return postRepository.findById(postId).orElseThrow(NoSuchElementException::new);
     }
+
+    public void plusPostViewCount(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(NoSuchElementException::new);
+        post.setViewCounts(post.getViewCounts() + 1);
+        postRepository.save(post);
+    }
 }

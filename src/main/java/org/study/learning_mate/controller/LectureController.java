@@ -7,18 +7,23 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import org.study.learning_mate.SuccessResponse;
+import org.study.learning_mate.dto.DemandLectureDTO;
 import org.study.learning_mate.dto.LectureDTO;
 import org.study.learning_mate.global.PagedSuccessResponse;
 import org.study.learning_mate.lecture.LectureService;
 import org.study.learning_mate.platform.PlatformTypeManager;
 import org.study.learning_mate.platform.PlatformTypeManager.PlatformType;
+import org.study.learning_mate.post.PostService;
 import org.study.learning_mate.service.CrawlService;
+import org.study.learning_mate.service.RedisService;
+import org.study.learning_mate.utils.IpExtractor;
 
 import javax.management.InstanceAlreadyExistsException;
 
@@ -28,16 +33,22 @@ public class LectureController {
 
     private final LectureService lectureService;
     private final PlatformTypeManager platformTypeManager; // TODO : 올바른 DI일지 확인
-    private final CrawlService crawlService;
+    private final PostService postService;
+    private final RedisService redisService;
+    private final IpExtractor ipExtractor;
 
     public LectureController(
             LectureService lectureService,
             PlatformTypeManager platformTypeManager,
-            CrawlService crawlService
+            IpExtractor ipExtractor,
+            PostService postService,
+            RedisService redisService
     ) {
         this.lectureService = lectureService;
         this.platformTypeManager = platformTypeManager;
-        this.crawlService =  crawlService;
+        this.ipExtractor = ipExtractor;
+        this.postService = postService;
+        this.redisService = redisService;
     }
 
     @GetMapping("/lectures")
@@ -74,6 +85,28 @@ public class LectureController {
         return PagedSuccessResponse.success(responses);
     }
 
+    @Operation(summary = "강의 게시글 조회", description = "강의 게시글을 조회합니다.")
+    @Parameters({
+            @Parameter(name = "lectureId", description = "강의 게시글 식별자", required = true),
+    })
+    @GetMapping("/lectures/{lectureId}")
+    public SuccessResponse<LectureDTO.LectureResponse> getLecture(
+            @PathVariable(value="lectureId") Long lectureId,
+            HttpServletRequest request
+
+    ) {
+        String ipAddress = ipExtractor.getRemoteAddr(request);
+        String key = ipAddress + "+" + lectureId;
+        System.out.println("key " + key);
+        if (!redisService.isExist(key)){
+            // todo : 통신 끊기는 경우 복구처리
+            System.out.println("create key");
+            redisService.setData(key, "1", redisService.getExpireByEnv()); // in prod : 1800000L
+            postService.plusPostViewCount(lectureId);
+        }
+        LectureDTO.LectureResponse result = lectureService.getLecture(lectureId);
+        return SuccessResponse.success(result);
+    }
 
     @PostMapping("/lectures")
     @Parameters({
