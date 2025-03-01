@@ -80,10 +80,11 @@ public class LikeService {
 
         likeUpVoteRepository.save(likeUpVote);
 
-        Post post = likeUpVote.getUpVote().getPost();
-        post.setLikeCounts(post.getLikeCounts() + 1);
-
-        postRepository.save(post);
+//        Post post = likeUpVote.getUpVote().getPost();
+//        post.setLikeCounts(post.getLikeCounts() + 1);
+        upVote.setLikeCount(upVote.getLikeCount() + 1);
+        upVoteRepository.save(upVote);
+//        postRepository.save(post);
 
         return;
     }
@@ -97,10 +98,12 @@ public class LikeService {
 
         likeDownVoteRepository.save(likeDownVote);
 
-        Post post = likeDownVote.getDownVote().getPost();
-        post.setLikeCounts(post.getLikeCounts() + 1);
+        downVote.setLikeCount(downVote.getLikeCount() + 1);
+        downVoteRepository.save(downVote);
+//        Post post = likeDownVote.getDownVote().getPost();
+//        post.setLikeCounts(post.getLikeCounts() + 1);
 
-        postRepository.save(post);
+//        postRepository.save(post);
 
         return;
     }
