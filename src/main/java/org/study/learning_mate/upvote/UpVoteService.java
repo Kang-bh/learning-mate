@@ -39,7 +39,7 @@ public class UpVoteService {
         return upVoteMapper.toUpVotePageResponse(upVotes);
     }
 
-    public void createUpVote(
+    public UpVoteDTO.UpVoteResponse createUpVote(
             Long postId,
             UpVoteDTO.UpVoteRequest request,
             User user
@@ -54,8 +54,8 @@ public class UpVoteService {
                 .reason(request.getReason())
                 .build();
 
-        upVoteRepository.save(upVote);
-        return;
+        UpVote savedUpVote = upVoteRepository.save(upVote);
+        return upVoteMapper.toUpVoteResponse(savedUpVote);
     }
 
     public UpVoteDTO.UpVoteResponse updateUpVote(

@@ -42,7 +42,7 @@ public class DownVoteService {
     }
 
     // downvote 생성
-    public void createDownVote(Long postId, DownVoteDTO.DownVoteRequest request, User user) {
+    public DownVoteDTO.DownVoteResponse createDownVote(Long postId, DownVoteDTO.DownVoteRequest request, User user) {
 
         Post post = postRepository.findById(postId)
                 .orElseThrow(NoSuchElementException::new);
@@ -54,9 +54,9 @@ public class DownVoteService {
                 .reason(request.getReason())
                 .build();
 
-        downVoteRepository.save(downVote);
+        DownVote savedDownVote = downVoteRepository.save(downVote);
 
-        return;
+        return downVoteMapper.toDownVoteDTO(savedDownVote);
     }
 
     // downvote 수정

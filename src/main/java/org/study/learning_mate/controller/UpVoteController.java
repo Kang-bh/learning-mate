@@ -61,7 +61,7 @@ public class UpVoteController {
             @Parameter(name = "postId", description = "게시글 식별자", required = true),
     })
     @PostMapping("/posts/{postId}/up-votes")
-    public SuccessResponse<?> createUpVote(
+    public SuccessResponse<UpVoteDTO.UpVoteResponse> createUpVote(
             @PathVariable Long postId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "추천글 객체",
@@ -75,8 +75,8 @@ public class UpVoteController {
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         User user = userService.findUserById(userDetails.getId());
-        upVoteService.createUpVote(postId, request, user);
-        return SuccessResponse.success(201, "CREATED");
+        UpVoteDTO.UpVoteResponse result = upVoteService.createUpVote(postId, request, user);
+        return SuccessResponse.success(201, result);
     }
 
     @Operation(summary = "날강도 게시글 추천글 수정", description = "Lecture, 날강도 글의 추천글을 수정합니다.")

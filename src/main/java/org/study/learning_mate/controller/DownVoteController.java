@@ -54,7 +54,7 @@ public class DownVoteController {
             @Parameter(name = "postId", description = "게시글(Lecture, 날.강.도) 식별자", required = true),
     })
     @PostMapping("/posts/{postId}/down-votes")
-    public SuccessResponse<?> createDownVote(
+    public SuccessResponse<DownVoteDTO.DownVoteResponse> createDownVote(
             @PathVariable Long postId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "DownVote 생성 객체",
@@ -68,8 +68,8 @@ public class DownVoteController {
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         User user = userService.findUserById(userDetails.getId());
-        downVoteService.createDownVote(postId, request, user);
-        return SuccessResponse.success(201, "CREATED");
+        DownVoteDTO.DownVoteResponse result = downVoteService.createDownVote(postId, request, user);
+        return SuccessResponse.success(201, result);
     }
 
     @Operation(summary = "날강도 게시글 비추천글 수정", description = "Lecture, 날강도 글의 비추천글을 수정합니다.")
