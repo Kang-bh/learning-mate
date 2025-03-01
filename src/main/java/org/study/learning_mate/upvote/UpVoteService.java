@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.study.learning_mate.dto.UpVoteDTO;
+import org.study.learning_mate.lecture.Lecture;
 import org.study.learning_mate.post.Post;
 import org.study.learning_mate.post.PostRepository;
 import org.study.learning_mate.user.User;
@@ -55,6 +56,11 @@ public class UpVoteService {
                 .build();
 
         UpVote savedUpVote = upVoteRepository.save(upVote);
+
+
+        post.setLikeCounts(post.getLikeCounts() + 1);
+        postRepository.save(post);
+
         return upVoteMapper.toUpVoteResponse(savedUpVote);
     }
 

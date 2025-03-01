@@ -135,10 +135,9 @@ public class LikeService {
         likeUpVoteRepository.deleteByUser_IdAndUpVote_Id(userId, upVoteId);
 
         UpVote upVote = upVoteRepository.findById(upVoteId).orElseThrow(NoSuchElementException::new);
-        Post post = upVote.getPost();
-        post.setLikeCounts(post.getLikeCounts() - 1);
+        upVote.setLikeCount(upVote.getLikeCount() - 1);
 
-        postRepository.save(post);
+        upVoteRepository.save(upVote);
         return;
     }
 
@@ -150,10 +149,13 @@ public class LikeService {
 
 
         DownVote downVote = downVoteRepository.findById(downVoteId).orElseThrow(NoSuchElementException::new);
-        Post post = downVote.getPost();
-        post.setLikeCounts(post.getLikeCounts() - 1);
+//        Post post = downVote.getPost();
+//        post.setLikeCounts(post.getLikeCounts() - 1);
+//
+//        postRepository.save(post);
+        downVote.setLikeCount(downVote.getLikeCount() - 1);
+        downVoteRepository.save(downVote);
 
-        postRepository.save(post);
         return;
     }
 }

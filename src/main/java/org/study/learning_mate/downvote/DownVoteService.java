@@ -3,7 +3,10 @@ package org.study.learning_mate.downvote;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.study.learning_mate.dto.DownVoteDTO;
+import org.study.learning_mate.lecture.Lecture;
+import org.study.learning_mate.lecture.LectureRepository;
 import org.study.learning_mate.post.Post;
 import org.study.learning_mate.post.PostRepository;
 import org.study.learning_mate.user.User;
@@ -19,15 +22,17 @@ public class DownVoteService {
     private final DownVoteRepository downVoteRepository;
     private final DownVoteMapper downVoteMapper;
     private final PostRepository postRepository;
+    private final LectureRepository lectureRepository;
 
     public DownVoteService(
             DownVoteRepository downVoteRepository,
             DownVoteMapper downVoteMapper,
-            PostRepository postRepository
-    ) {
+            PostRepository postRepository,
+            LectureRepository lectureRepository) {
         this.downVoteRepository = downVoteRepository;
         this.downVoteMapper = downVoteMapper;
         this.postRepository = postRepository;
+        this.lectureRepository = lectureRepository;
     }
 
     public DownVote getDownVoteById(Long downVoteId) {
@@ -42,6 +47,7 @@ public class DownVoteService {
     }
 
     // downvote 생성
+    @Transactional
     public DownVoteDTO.DownVoteResponse createDownVote(Long postId, DownVoteDTO.DownVoteRequest request, User user) {
 
         Post post = postRepository.findById(postId)
@@ -55,6 +61,10 @@ public class DownVoteService {
                 .build();
 
         DownVote savedDownVote = downVoteRepository.save(downVote);
+
+        Lecture lecture = post.getLecture();
+        lecture.setDislikeCounts(lecture.getDislikeCounts() + 1);
+        lectureRepository.save(lecture);
 
         return downVoteMapper.toDownVoteDTO(savedDownVote);
     }
