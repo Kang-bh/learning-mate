@@ -4,6 +4,7 @@ package org.study.learning_mate.service;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,14 @@ public class CrawlService {
 //     }
 
     public String crawlLectureTitle(String url) {
-        WebDriver webDriver = new ChromeDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless"); // 브라우저 창을 띄우지 않음
+        options.addArguments("--no-sandbox"); // 샌드박스 비활성화
+        options.addArguments("--disable-dev-shm-usage"); // /dev/shm 사용량 줄임
+        options.addArguments("--disable-gpu"); // GPU 비활성화 (Linux 환경에서 필요)
+        options.addArguments("--window-size=1920,1080"); // 브라우저 창 크기 설정
+
+        WebDriver webDriver = new ChromeDriver(options);
         WebDriverWait driverWait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
 
         try {

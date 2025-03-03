@@ -69,6 +69,13 @@ public class BookmarkService {
         return;
     }
 
+    public void deleteBookmark(Long bookmarkId, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(NoSuchElementException::new);
+
+        bookmarkRepository.deleteById(bookmarkId);
+        return;
+    }
+
     private List<Long> extractIds(List<Bookmark> bookmarks) {
         List<Long> ids = new ArrayList<>();
         for (Bookmark entity : bookmarks) {

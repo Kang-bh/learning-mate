@@ -34,7 +34,6 @@ public class BookmarkController {
         this.lectureService = lectureService;
     }
 
-
     @Parameters({
             @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
             @Parameter(name = "platform", required = false, description = "플랫폼 이름"),
@@ -84,5 +83,14 @@ public class BookmarkController {
         Long userId = customUserDetails.getId();
         bookmarkService.addBookmark(request.getPostId(), userId);
         return SuccessResponse.success(201, "CREATED");
+    }
+
+    @DeleteMapping("/bookmarks/{bookmarkId}")
+    public SuccessResponse<?> deleteBookmarkLecture(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long bookmarkId
+    ) {
+        bookmarkService.deleteBookmark(bookmarkId, customUserDetails.getId());
+        return SuccessResponse.success(204, "DELETED");
     }
 }
