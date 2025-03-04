@@ -19,4 +19,8 @@ public class BookmarkDTO {
     public static class createBookmarkRequest {
         private Long postId;
     }
+
+    public static class isExistBookmarkRequest {
+        private Long postId;
+    }
 }

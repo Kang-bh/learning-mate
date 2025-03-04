@@ -93,4 +93,13 @@ public class BookmarkController {
         bookmarkService.deleteBookmark(bookmarkId, customUserDetails.getId());
         return SuccessResponse.success(204, "DELETED");
     }
+
+    @GetMapping("/bookmarks/exist")
+    public SuccessResponse<?> isBookmarkExist(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestParam Long postId
+        ) {
+        boolean result = bookmarkService.isExistBookmark(postId, customUserDetails.getId());
+        return SuccessResponse.success(result);
+    }
 }

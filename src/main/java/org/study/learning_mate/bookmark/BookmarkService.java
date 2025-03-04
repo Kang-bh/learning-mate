@@ -76,6 +76,11 @@ public class BookmarkService {
         return;
     }
 
+    public boolean isExistBookmark(Long postId, Long userId) {
+        boolean result = bookmarkRepository.existsByUser_IdAndPost_Id(userId, postId);
+        return result;
+    }
+
     private List<Long> extractIds(List<Bookmark> bookmarks) {
         List<Long> ids = new ArrayList<>();
         for (Bookmark entity : bookmarks) {

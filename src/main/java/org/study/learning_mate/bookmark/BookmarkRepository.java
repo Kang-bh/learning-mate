@@ -22,4 +22,5 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
     Page<Bookmark> findBookmarksByPlatformTitleAndUserId(@Param("platformTitle") String platformTitle,
                                                          @Param("userId") Long userId,
                                                          Pageable pageable);
+    Boolean existsByUser_IdAndPost_Id(Long userId, Long postId);
 }
