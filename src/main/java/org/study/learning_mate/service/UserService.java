@@ -51,4 +51,9 @@ public class UserService {
         return userMapper.toUserTempInfo(savedUser);
     }
 
+    public void deleteUserById(Long userId) {
+        userRepository.deleteById(userId);
+        return;
+    }
+
 }

@@ -23,4 +23,5 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
                                                          @Param("userId") Long userId,
                                                          Pageable pageable);
     Boolean existsByUser_IdAndPost_Id(Long userId, Long postId);
+    void deleteBookmarkByUser_IdAndPost_Id(Long userId, Long postId);
 }

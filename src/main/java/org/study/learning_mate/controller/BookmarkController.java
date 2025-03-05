@@ -85,12 +85,12 @@ public class BookmarkController {
         return SuccessResponse.success(201, "CREATED");
     }
 
-    @DeleteMapping("/bookmarks/{bookmarkId}")
+    @DeleteMapping("/bookmarks")
     public SuccessResponse<?> deleteBookmarkLecture(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @PathVariable Long bookmarkId
+            @RequestParam Long postId
     ) {
-        bookmarkService.deleteBookmark(bookmarkId, customUserDetails.getId());
+        bookmarkService.deleteBookmark(postId, customUserDetails.getId());
         return SuccessResponse.success(204, "DELETED");
     }
 

@@ -62,4 +62,12 @@ public class UserController {
         UserDTO.Info result = userService.findUserInfoById(customUserDetails.getId());
         return SuccessResponse.success(result);
     }
+
+    @DeleteMapping("/my")
+    public SuccessResponse deleteUser(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ) {
+        userService.deleteUserById(customUserDetails.getId());
+        return SuccessResponse.success(204, "DELETED");
+    }
 }

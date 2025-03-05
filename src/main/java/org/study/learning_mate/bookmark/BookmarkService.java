@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.study.learning_mate.UserRepository;
 import org.study.learning_mate.dto.BookmarkDTO;
 import org.study.learning_mate.post.Post;
@@ -69,10 +70,11 @@ public class BookmarkService {
         return;
     }
 
-    public void deleteBookmark(Long bookmarkId, Long userId) {
+    @Transactional
+    public void deleteBookmark(Long postId, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(NoSuchElementException::new);
 
-        bookmarkRepository.deleteById(bookmarkId);
+        bookmarkRepository.deleteBookmarkByUser_IdAndPost_Id(userId, postId);
         return;
     }
 
