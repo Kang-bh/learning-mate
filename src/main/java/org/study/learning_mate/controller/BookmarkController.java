@@ -67,6 +67,9 @@ public class BookmarkController {
         return SuccessResponse.success(result);
     }
 
+    @Parameters({
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
+    })
     @PostMapping("/bookmarks")
     public SuccessResponse<?> addBookmarkLecture(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -85,6 +88,10 @@ public class BookmarkController {
         return SuccessResponse.success(201, "CREATED");
     }
 
+    @Parameters({
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
+            @Parameter(name = "postId", required = true, description = "게시물 식별값"),
+    })
     @DeleteMapping("/bookmarks")
     public SuccessResponse<?> deleteBookmarkLecture(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
@@ -94,6 +101,10 @@ public class BookmarkController {
         return SuccessResponse.success(204, "DELETED");
     }
 
+    @Parameters({
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
+            @Parameter(name = "postId", required = true, description = "게시물 식별값"),
+    })
     @GetMapping("/bookmarks/exist")
     public SuccessResponse<?> isBookmarkExist(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
