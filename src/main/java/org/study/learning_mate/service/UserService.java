@@ -51,6 +51,16 @@ public class UserService {
         return userMapper.toUserTempInfo(savedUser);
     }
 
+    @Transactional
+    public UserDTO.updateUser updateUserProfile(Long userId, String userProfile) {
+        User user = userRepository.findById(userId).orElseThrow(NoSuchElementException::new);
+
+        user.setProfileImage(userProfile);
+
+        User savedUser = userRepository.save(user);
+        return userMapper.toUserTempInfo(savedUser);
+    }
+
     public void deleteUserById(Long userId) {
         userRepository.deleteById(userId);
         return;
