@@ -26,7 +26,7 @@ public class CrawlService {
 //     }
 
     public String crawlLectureTitle(String url) {
-        System.setProperty("webdriver.chrome.driver", "/usr/local/bin/chromedriver-linux64/chromedriver");
+//        System.setProperty("webdriver.chrome.driver", "/usr/local/bin/chromedriver-linux64/chromedriver");
 
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless"); // 브라우저 창을 띄우지 않음

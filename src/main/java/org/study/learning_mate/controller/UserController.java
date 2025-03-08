@@ -97,7 +97,6 @@ public class UserController {
     @PostMapping(value = "/profile-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Parameters({
             @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
-            @Parameter(name = "profileImage", description = "multipart/form-data 형식으로 이미지를 받습니다.")
     })
     public SuccessResponse updateProfileImage(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
@@ -108,9 +107,20 @@ public class UserController {
         return SuccessResponse.success(result);
     }
 
+    @Parameters({
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
+    })
     @PatchMapping(value="/my/password")
     public SuccessResponse updatePassword(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "비밀번호 갱신 객체",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = UserDTO.updateUserPassword.class)
+                    )
+            )
             @RequestBody UserDTO.updateUserPassword request
     ) {
         userService.updateUserPassword(customUserDetails.getId(), request.getPassword());
