@@ -33,7 +33,6 @@ public class CrawlService {
         options.addArguments("--no-sandbox"); // 샌드박스 비활성화
         options.addArguments("--disable-dev-shm-usage"); // /dev/shm 사용량 줄임
         options.addArguments("--disable-gpu"); // GPU 비활성화 (Linux 환경에서 필요)
-        options.addArguments("--window-size=1920,1080"); // 브라우저 창 크기 설정
 
         WebDriver webDriver = new ChromeDriver(options);
         WebDriverWait driverWait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
