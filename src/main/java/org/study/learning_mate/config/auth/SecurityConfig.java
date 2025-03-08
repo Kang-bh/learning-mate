@@ -27,6 +27,7 @@ import org.study.learning_mate.config.auth.jwt.JWTUtil;
 import org.study.learning_mate.global.ErrorResponse;
 import org.study.learning_mate.global.SecurityGlobalExceptionHandler;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
@@ -75,7 +76,10 @@ public class SecurityConfig {
 
                         CorsConfiguration configuration = new CorsConfiguration();
 
-                        configuration.setAllowedOrigins(Collections.singletonList("https://localhost:4000"));
+                        configuration.setAllowedOrigins(Arrays.asList(
+                                "https://localhost:4000",
+                                "https://d2tlq4x5oaekvl.cloudfront.net"
+                        ));
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
