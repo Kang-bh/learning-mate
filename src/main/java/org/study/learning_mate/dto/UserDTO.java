@@ -65,4 +65,10 @@ public class UserDTO {
         private String userId;
         private String password;
     }
+
+    @Getter
+    @Setter
+    public static class updateUserPassword {
+        private String password;
+    }
 }

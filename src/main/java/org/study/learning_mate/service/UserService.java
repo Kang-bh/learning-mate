@@ -66,4 +66,12 @@ public class UserService {
         return;
     }
 
+    @Transactional
+    public void updateUserPassword(Long userId, String newPassword) {
+        User user = userRepository.findById(userId).orElseThrow(NoSuchElementException::new);
+        user.setPassword(newPassword);
+        User savedUser = userRepository.save(user);
+        return;
+    }
+
 }

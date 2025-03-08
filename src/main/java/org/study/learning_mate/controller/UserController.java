@@ -85,12 +85,14 @@ public class UserController {
             @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
     })
     @DeleteMapping("/my")
-    public SuccessResponse deleteUser(
+    public SuccessResponse<?> deleteUser(
             @AuthenticationPrincipal CustomUserDetails customUserDetails
     ) {
         userService.deleteUserById(customUserDetails.getId());
         return SuccessResponse.success(204, "DELETED");
     }
+
+
 
     @PostMapping(value = "/profile-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Parameters({
@@ -104,6 +106,15 @@ public class UserController {
         String imageUrl = s3Service.uploadFile(profileImage);
         UserDTO.updateUser result = userService.updateUserProfile(customUserDetails.getId(), imageUrl);
         return SuccessResponse.success(result);
+    }
+
+    @PatchMapping(value="/my/password")
+    public SuccessResponse updatePassword(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestBody UserDTO.updateUserPassword request
+    ) {
+        userService.updateUserPassword(customUserDetails.getId(), request.getPassword());
+        return SuccessResponse.success(204, "PASSWORD UPDATED");
     }
 
 }
