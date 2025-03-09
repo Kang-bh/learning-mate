@@ -1,6 +1,7 @@
 package org.study.learning_mate.service;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 
+@Slf4j
 @Service
 public class CrawlService {
 
@@ -28,6 +30,7 @@ public class CrawlService {
     public String crawlLectureTitle(String url) {
 //        System.setProperty("webdriver.chrome.driver", "/usr/local/bin/chromedriver-linux64/chromedriver");
 
+        log.info("1111");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless"); // 브라우저 창을 띄우지 않음
         options.addArguments("--no-sandbox"); // 샌드박스 비활성화
@@ -35,6 +38,7 @@ public class CrawlService {
         options.addArguments("--disable-gpu"); // GPU 비활성화 (Linux 환경에서 필요)
 
         WebDriver webDriver = new ChromeDriver(options);
+        log.info("2222");
         WebDriverWait driverWait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
 
         try {
