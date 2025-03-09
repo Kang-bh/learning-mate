@@ -107,6 +107,17 @@ public class UserController {
         return SuccessResponse.success(result);
     }
 
+    @DeleteMapping(value = "/profile-image")
+    @Parameters({
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
+    })
+    public SuccessResponse<UserDTO.updateUser> deleteProfileImage(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ) {
+        UserDTO.updateUser result = userService.deleteUserProfile(customUserDetails.getId());
+        return SuccessResponse.success(result);
+    }
+
     @Parameters({
             @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
     })
