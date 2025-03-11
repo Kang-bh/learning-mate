@@ -129,7 +129,7 @@ public class LectureService {
 
         System.out.println("platform = " + platform);
 
-        String title = crawlService.crawlLectureTitle(url);
+        String title = crawlService.invokeLambda(url);
         System.out.println("title = " + title);
 
         Boolean isExist = postRepository.existsByTitle(title);

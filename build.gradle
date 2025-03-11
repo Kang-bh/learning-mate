@@ -55,6 +55,8 @@ dependencies {
 	// selenium
 	implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.27.0'
 
+	// lambda
+	implementation 'software.amazon.awssdk:lambda:2.20.42'
 	// s3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
