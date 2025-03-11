@@ -1,7 +1,9 @@
 package org.study.learning_mate.upvote;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.study.learning_mate.dto.UpVoteDTO;
 import org.study.learning_mate.lecture.Lecture;
@@ -13,6 +15,7 @@ import org.study.learning_mate.utils.UpVoteMapper;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 public class UpVoteService {
@@ -36,7 +39,15 @@ public class UpVoteService {
     }
 
     public Page<UpVoteDTO.UpVoteResponse> getUpVotes(Long postId, Pageable pageable) {
-        Page<UpVote> upVotes = upVoteRepository.findAllByPost_Id(postId, pageable);
+        List<Sort.Order> sortedOrders = pageable.getSort().stream()
+                .map(order -> new Sort.Order(order.getDirection(), switchKeyName(order.getProperty())))
+                .collect(Collectors.toList());
+
+        Sort newSort = Sort.by(sortedOrders);
+
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), newSort);
+
+        Page<UpVote> upVotes = upVoteRepository.findAllByPost_Id(postId, sortedPageable);
         return upVoteMapper.toUpVotePageResponse(upVotes);
     }
 
@@ -91,5 +102,15 @@ public class UpVoteService {
         }
 
         upVoteRepository.deleteById(upVoteId);
+    }
+
+    private String switchKeyName(String key) {
+        switch (key) {
+            case "likes":
+                return "likeCount";
+            case "createdTime":
+                return "createdAt";
+        }
+        return key;
     }
 }

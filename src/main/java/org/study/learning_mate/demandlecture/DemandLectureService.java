@@ -3,7 +3,9 @@ package org.study.learning_mate.demandlecture;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.study.learning_mate.dto.DemandLectureDTO;
 import org.study.learning_mate.post.Post;
@@ -16,6 +18,7 @@ import org.study.learning_mate.utils.DemandLectureMapper;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -36,7 +39,13 @@ public class DemandLectureService {
     }
 
     public Page<DemandLectureDTO.DemandLectureDetailResponse> findAllDemandLectureList(Pageable pageable) {
-        Page<DemandLecture> demandLectures = demandLectureRepository.findAll(pageable);
+        List<Sort.Order> sortedOrders = pageable.getSort().stream()
+                .map(order -> new Sort.Order(order.getDirection(), switchKeyName(order.getProperty())))
+                .collect(Collectors.toList());
+        Sort newSort = Sort.by(sortedOrders);
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), newSort);
+
+        Page<DemandLecture> demandLectures = demandLectureRepository.findAll(sortedPageable);
 
         return demandLectureMapper.toDemandLectureDetailPageDTO(demandLectures);
     }
@@ -120,4 +129,17 @@ public class DemandLectureService {
         Page<DemandLecture> demandLectures = demandLectureRepository.findByUserId(userId, pageable);
 
         return demandLectureMapper.toDemandLectureDetailPageDTO(demandLectures);
-    }}
+    }
+
+    private String switchKeyName(String key) {
+        switch (key) {
+            case "likes":
+                return "demandLecturePK.post.likeCounts";
+            case "createdTime":
+                return "createdAt";
+            case "views":
+                return "demandLecturePK.post.viewCounts";
+        }
+        return key;
+    }
+}

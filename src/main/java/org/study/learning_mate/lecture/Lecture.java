@@ -23,9 +23,8 @@ import java.util.Date;
 public class Lecture {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id", nullable = false)
-    private Long id;
+    private Long id;  // Post의 id와 동일한 값 사용
 
     @Column(name = "downvote_counts", nullable = false)
     @ColumnDefault("0")
@@ -47,8 +46,8 @@ public class Lecture {
     @LastModifiedDate
     private Date updatedAt;
 
-
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "post_id", referencedColumnName = "id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")  // Lecture의 기본 키(id)를 Post의 id와 동일하게 사용
+    @MapsId
     private Post post;
 }

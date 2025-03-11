@@ -26,6 +26,7 @@ import org.study.learning_mate.service.RedisService;
 import org.study.learning_mate.utils.IpExtractor;
 
 import javax.management.InstanceAlreadyExistsException;
+import java.util.Optional;
 
 @Tag(name = "Lecture API", description = " API related with Lecture CRUD")
 @RestController
@@ -71,16 +72,7 @@ public class LectureController {
         if (platform != null) {
             platformType = platformTypeManager.getPlatformTypeByName(platform);
         }
-
-        if (platform == null && title == null) {
-            responses = lectureService.getLectures(pageable);
-        } else if (platform == null) {
-            responses = lectureService.getLectures(title, pageable);
-        } else if (title == null) {
-            responses = lectureService.getLectures(platformType, pageable);
-        } else {
-            responses = lectureService.getLectures(title, platformType, pageable);
-        }
+        responses = lectureService.getLectures(Optional.ofNullable(title), Optional.ofNullable(platformType), pageable);
 
         return PagedSuccessResponse.success(responses);
     }

@@ -4,7 +4,10 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.persister.entity.UniqueKeyEntry;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.study.learning_mate.dto.BookmarkDTO;
 import org.study.learning_mate.dto.LectureDTO;
@@ -23,6 +26,8 @@ import javax.management.InstanceAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.study.learning_mate.post.PostType.LECTURE;
 
@@ -63,35 +68,53 @@ public class LectureService {
     }
 
     // overloading
+//    public Page<LectureDTO.LectureResponse> getLectures(
+//        Pageable pageable
+//    ) {
+//        Page<Lecture> lectures = lectureRepository.findAll(pageable);
+//        return lectureMapper.toLectureResponseDTOPage(lectures);
+//    }
+//
+//    public Page<LectureDTO.LectureResponse> getLectures(
+//            String title,
+//            Pageable pageable
+//    ) {
+//        Page<Lecture> lectures = lectureRepository.findAllByPost_TitleContaining(title, pageable);
+//        return lectureMapper.toLectureResponseDTOPage(lectures);
+//    }
+//
+//    public Page<LectureDTO.LectureResponse> getLectures(
+//            PlatformType platform, // enum처리 필수
+//            Pageable pageable
+//    ) {
+//        Page<Lecture> lectures = lectureRepository.findAllByPlatform(platform, pageable);
+//        return lectureMapper.toLectureResponseDTOPage(lectures);
+//    }
+//
+//    public Page<LectureDTO.LectureResponse> getLectures(
+//            String title,
+//            PlatformType platform,
+//            Pageable pageable
+//    ) {
+//        Page<Lecture> lectures = lectureRepository.findAllByPost_TitleContainingAndPlatform(title, platform, pageable);
+//        return lectureMapper.toLectureResponseDTOPage(lectures);
+//    }
+
     public Page<LectureDTO.LectureResponse> getLectures(
+        Optional<String> title,
+        Optional<PlatformType> platform,
         Pageable pageable
     ) {
-        Page<Lecture> lectures = lectureRepository.findAll(pageable);
-        return lectureMapper.toLectureResponseDTOPage(lectures);
-    }
+        Specification<Lecture> spec = LectureSpecification.filterBy(title, platform);
+        List<Sort.Order> sortedOrders = pageable.getSort().stream()
+                .map(order -> new Sort.Order(order.getDirection(), switchKeyName(order.getProperty())))
+                .collect(Collectors.toList());
 
-    public Page<LectureDTO.LectureResponse> getLectures(
-            String title,
-            Pageable pageable
-    ) {
-        Page<Lecture> lectures = lectureRepository.findAllByPost_TitleContaining(title, pageable);
-        return lectureMapper.toLectureResponseDTOPage(lectures);
-    }
+        Sort newSort = Sort.by(sortedOrders);
 
-    public Page<LectureDTO.LectureResponse> getLectures(
-            PlatformType platform, // enum처리 필수
-            Pageable pageable
-    ) {
-        Page<Lecture> lectures = lectureRepository.findAllByPlatform(platform, pageable);
-        return lectureMapper.toLectureResponseDTOPage(lectures);
-    }
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), newSort);
 
-    public Page<LectureDTO.LectureResponse> getLectures(
-            String title,
-            PlatformType platform,
-            Pageable pageable
-    ) {
-        Page<Lecture> lectures = lectureRepository.findAllByPost_TitleContainingAndPlatform(title, platform, pageable);
+        Page<Lecture> lectures = lectureRepository.findAll(spec, sortedPageable);
         return lectureMapper.toLectureResponseDTOPage(lectures);
     }
 
@@ -150,5 +173,19 @@ public class LectureService {
         List<Lecture> result = lectureRepository.findAllById(bookmarkIds);
         log.info("result : " + result );
         return lectureMapper.toLectureResponseDTOList(result);
+    }
+
+    private String switchKeyName(String key) {
+        switch (key) {
+            case "likes":
+                return "post.likeCounts";
+            case "dislikes":
+                return "dislikeCounts";
+            case "createdTime":
+                return "createdAt";
+            case "views":
+                return "post.viewCounts";
+        }
+        return key;
     }
 }

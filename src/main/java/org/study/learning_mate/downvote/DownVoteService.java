@@ -1,7 +1,9 @@
 package org.study.learning_mate.downvote;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.study.learning_mate.dto.DownVoteDTO;
@@ -15,6 +17,7 @@ import org.study.learning_mate.utils.DownVoteMapper;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 public class DownVoteService {
@@ -41,7 +44,16 @@ public class DownVoteService {
 
     // downvote list 조회
     public Page<DownVoteDTO.DownVoteResponse> getDownVotes(Long postId, Pageable pageable) {
-        Page<DownVote> downVotes = downVoteRepository.findAllByPost_Id(postId, pageable);
+        List<Sort.Order> sortedOrders = pageable.getSort().stream()
+                .map(order -> new Sort.Order(order.getDirection(), switchKeyName(order.getProperty())))
+                .collect(Collectors.toList());
+
+        Sort newSort = Sort.by(sortedOrders);
+
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), newSort);
+
+
+        Page<DownVote> downVotes = downVoteRepository.findAllByPost_Id(postId, sortedPageable);
 
         return downVoteMapper.toDownVotePageDTO(downVotes);
     }
@@ -93,5 +105,15 @@ public class DownVoteService {
         downVoteRepository.delete(downVote);
 
         return;
+    }
+
+    private String switchKeyName(String key) {
+        switch (key) {
+            case "likes":
+                return "likeCount";
+            case "createdTime":
+                return "createdAt";
+        }
+        return key;
     }
 }
