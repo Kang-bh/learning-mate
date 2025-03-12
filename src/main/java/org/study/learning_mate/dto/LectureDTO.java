@@ -32,4 +32,6 @@ public class LectureDTO {
         @Schema(description = "강의 url")
         private String url;
     }
+
+
 }

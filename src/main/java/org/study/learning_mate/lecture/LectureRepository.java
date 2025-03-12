@@ -17,6 +17,8 @@ public interface LectureRepository extends JpaRepository<Lecture, Long>, JpaSpec
     Page<Lecture> findAllByPost_TitleContainingAndPlatform(String title, PlatformType platform, Pageable pageable);
     Page<Lecture> findAllByPost_TitleContaining(String title, Pageable pageable);
 
+    List<Lecture> findALlByPost_TitleContaining(String title);
+
     @Query("SELECT l FROM Lecture l WHERE l.id IN :postIds")
     List<Lecture> findByPostIds(@Param("postIds") List<Long> postIds);
 }

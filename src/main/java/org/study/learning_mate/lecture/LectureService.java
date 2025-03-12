@@ -120,7 +120,7 @@ public class LectureService {
 
     // todo :
     @Transactional
-    public void createLecture(String url) throws InstanceAlreadyExistsException {
+    public LectureDTO.LectureResponse createLecture(String url) throws InstanceAlreadyExistsException {
 
         // 이미 존재하는 강의인지 확인 by title
         // Platform check
@@ -163,9 +163,9 @@ public class LectureService {
                 .platform(platform)
                 .build();
 
-        lectureRepository.save(lecture);
+        Lecture savedLecture = lectureRepository.save(lecture);
 
-        return;
+        return lectureMapper.toLectureResponseDTO(savedLecture);
     }
 
     public List<LectureDTO.LectureResponse> findByLectureIds (List<Long> bookmarkIds) {
@@ -173,6 +173,14 @@ public class LectureService {
         List<Lecture> result = lectureRepository.findAllById(bookmarkIds);
         log.info("result : " + result );
         return lectureMapper.toLectureResponseDTOList(result);
+    }
+
+    public List<String> findLectureTitle(String title) {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("id").descending());
+
+        Page<Lecture> lectures = lectureRepository.findAllByPost_TitleContaining(title, pageable);
+
+        return getLectureTitles(lectures);
     }
 
     private String switchKeyName(String key) {
@@ -187,5 +195,15 @@ public class LectureService {
                 return "post.viewCounts";
         }
         return key;
+    }
+
+    private List<String> getLectureTitles(Page<Lecture> lectures) {
+        List<String> result = new ArrayList<>();
+
+        for (Lecture lecture : lectures) {
+            result.add(lecture.getPost().getTitle());
+        }
+
+        return result;
     }
 }

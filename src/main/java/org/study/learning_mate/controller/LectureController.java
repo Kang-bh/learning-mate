@@ -26,6 +26,7 @@ import org.study.learning_mate.service.RedisService;
 import org.study.learning_mate.utils.IpExtractor;
 
 import javax.management.InstanceAlreadyExistsException;
+import java.util.List;
 import java.util.Optional;
 
 @Tag(name = "Lecture API", description = " API related with Lecture CRUD")
@@ -104,7 +105,7 @@ public class LectureController {
     @Parameters({
             @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
     })
-    public SuccessResponse<?> createLecture (
+    public SuccessResponse<LectureDTO.LectureResponse> createLecture (
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Lecture 생성 객체",
                     required = true,
@@ -115,8 +116,19 @@ public class LectureController {
             )
             @RequestBody(required = true) LectureDTO.createLectureRequest request
     ) throws InstanceAlreadyExistsException {
-        lectureService.createLecture(request.getUrl());
+        LectureDTO.LectureResponse result = lectureService.createLecture(request.getUrl());
 
-        return SuccessResponse.success("SUCCESS");
+        return SuccessResponse.success(result);
+    }
+
+    @GetMapping("/lectures/titles")
+    @Parameters({
+            @Parameter(name = "title", description = "찾고자하는 강의 제목 일부분", required = true),
+    })
+    public SuccessResponse<List<String>> getLectureTitle (
+            @RequestParam(required = true) String title
+    ) {
+        List<String> result = lectureService.findLectureTitle(title);
+        return SuccessResponse.success(result);
     }
 }

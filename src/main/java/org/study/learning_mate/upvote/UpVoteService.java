@@ -1,5 +1,6 @@
 package org.study.learning_mate.upvote;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -93,6 +94,7 @@ public class UpVoteService {
         return upVoteMapper.toUpVoteResponse(upVote);
     }
 
+    @Transactional
     public void deleteUpVote(Long upVoteId, Long userId) throws AccessDeniedException {
 
         UpVote upVote = upVoteRepository.findById(upVoteId).orElseThrow(NoSuchElementException::new);
@@ -102,6 +104,9 @@ public class UpVoteService {
         }
 
         upVoteRepository.deleteById(upVoteId);
+        Post upVotePost = upVote.getPost();
+        upVotePost.setLikeCounts(upVotePost.getLikeCounts() - 1);
+        postRepository.save(upVotePost);
     }
 
     private String switchKeyName(String key) {

@@ -103,6 +103,9 @@ public class DownVoteService {
         }
 
         downVoteRepository.delete(downVote);
+        Lecture downVoteLecture = downVote.getPost().getLecture();
+        downVoteLecture.setDislikeCounts(downVoteLecture.getDislikeCounts() - 1);
+        lectureRepository.save(downVoteLecture);
 
         return;
     }
