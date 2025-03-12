@@ -22,7 +22,7 @@ public class PlatformTypeManager {
 
     private List<PlatformType> loadFromDatabase() {
         return platformRepository.findAll().stream()
-                .map(platform -> new PlatformType(platform.getTitle().toUpperCase(), platform.getTitle()))
+                .map(platform -> new PlatformType(platform.getId(), platform.getTitle()))
                 .collect(Collectors.toList());
     }
 
@@ -35,21 +35,22 @@ public class PlatformTypeManager {
     }
 
     public static class PlatformType {
-        private final String code;
+        private final Long code;
         private final String name;
 
-        private PlatformType(String code, String name) {
+        private PlatformType(Long code, String name) {
             this.code = code;
             this.name = name;
         }
 
-        public String getCode() {
+        public Long getCode() {
             return code;
         }
 
         public String getName() {
             return name;
-        }    }
+        }
+    }
 
     public PlatformTypeManager.PlatformType getPlatformTypeByName(String name) {
         return platformTypes.stream()

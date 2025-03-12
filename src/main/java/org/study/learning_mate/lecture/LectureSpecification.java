@@ -22,8 +22,8 @@ public class LectureSpecification {
             Join<Lecture, Post> postJoin = root.join("post", JoinType.INNER);
 
             title.ifPresent(t -> predicates.add(criteriaBuilder.like(postJoin.get("title"), "%" + t + "%")));
-            platform.ifPresent(p -> predicates.add(criteriaBuilder.equal(root.get("platform"), p)));
-
+            // PlatformType의 code를 기준으로 필터링
+            platform.ifPresent(p -> predicates.add(criteriaBuilder.equal(root.get("platform").get("id"), p.getCode())));
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }

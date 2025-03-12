@@ -97,13 +97,16 @@ public class DownVoteService {
     // downvote 삭제
     public void deleteDownVote(Long downVoteId, Long userId) throws AccessDeniedException {
         DownVote downVote = downVoteRepository.findById(downVoteId).orElseThrow(NoSuchElementException::new);
-
+        System.out.println(11);
         if (userId !=  downVote.getUser().getId()) {
             throw new AccessDeniedException("No access");
         }
 
+        System.out.println(2);
         downVoteRepository.delete(downVote);
+        System.out.println(3);
         Lecture downVoteLecture = downVote.getPost().getLecture();
+        System.out.println(4);
         downVoteLecture.setDislikeCounts(downVoteLecture.getDislikeCounts() - 1);
         lectureRepository.save(downVoteLecture);
 

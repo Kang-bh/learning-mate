@@ -72,6 +72,8 @@ public class LectureController {
 
         if (platform != null) {
             platformType = platformTypeManager.getPlatformTypeByName(platform);
+            System.out.println(platformType.getCode());
+            System.out.println(platformType.getName());
         }
         responses = lectureService.getLectures(Optional.ofNullable(title), Optional.ofNullable(platformType), pageable);
 
