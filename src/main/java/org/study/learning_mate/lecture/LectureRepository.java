@@ -7,16 +7,18 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.study.learning_mate.platform.Platform;
 import org.study.learning_mate.platform.PlatformTypeManager.PlatformType;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface LectureRepository extends JpaRepository<Lecture, Long>, JpaSpecificationExecutor<Lecture>  {
     Page<Lecture> findAllByPlatform(PlatformType platform, Pageable pageable);
-    Page<Lecture> findAllByPost_TitleContainingAndPlatform(String title, PlatformType platform, Pageable pageable);
+    Page<Lecture> findAllByPost_TitleContainingAndPlatform(String title, Platform platform, Pageable pageable);
     Page<Lecture> findAllByPost_TitleContaining(String title, Pageable pageable);
-
+//    Page<Lecture> findAllByPost_TitleContainingAndPlatform_Code(String title, Long platformCode, Pageable pageable);
     List<Lecture> findALlByPost_TitleContaining(String title);
 
     @Query("SELECT l FROM Lecture l WHERE l.id IN :postIds")

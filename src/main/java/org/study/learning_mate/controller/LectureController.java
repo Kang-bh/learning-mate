@@ -128,9 +128,18 @@ public class LectureController {
             @Parameter(name = "title", description = "찾고자하는 강의 제목 일부분", required = true),
     })
     public SuccessResponse<List<String>> getLectureTitle (
-            @RequestParam(required = true) String title
+            @RequestParam(required = true) String title,
+            @RequestParam(required = false) String platform
     ) {
-        List<String> result = lectureService.findLectureTitle(title);
+        PlatformType platformType = null;
+        List<String> result = new ArrayList<>();
+        if (platform == null) {
+            result = lectureService.findLectureTitle(title);
+        } else if (platform != null) {
+            platformType = platformTypeManager.getPlatformTypeByName(platform);
+            result = lectureService.findLectureTitle(title, platformType);
+        }
+
         return SuccessResponse.success(result);
     }
 }

@@ -187,6 +187,16 @@ public class LectureService {
         return getLectureTitles(lectures);
     }
 
+    public List<String> findLectureTitle(String title, PlatformType platform) {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("id").descending());
+        Platform platformEntity = platformRepository.findById(platform.getCode())
+                .orElseThrow(NoSuchElementException::new);
+
+        Page<Lecture> lectures = lectureRepository.findAllByPost_TitleContainingAndPlatform(title, platformEntity, pageable);
+
+        return getLectureTitles(lectures);
+    }
+
     private String switchKeyName(String key) {
         switch (key) {
             case "likes":
