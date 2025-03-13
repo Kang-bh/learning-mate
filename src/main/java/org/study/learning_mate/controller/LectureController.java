@@ -26,6 +26,7 @@ import org.study.learning_mate.service.RedisService;
 import org.study.learning_mate.utils.IpExtractor;
 
 import javax.management.InstanceAlreadyExistsException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,7 +56,7 @@ public class LectureController {
 
     @GetMapping("/lectures")
     @Parameters({
-            @Parameter(name = "platform", description = "강의 플랫폼", required = true),
+            @Parameter(name = "platforms", description = "강의 플랫폼", required = true),
             @Parameter(name = "title", description = "강의 제목", required = true),
             @Parameter(name = "sort", description = "정렬 순서", required = false, example = "id,asc"),
             @Parameter(name = "page", description = "페이지 수", required = false, example = "0"),
@@ -64,18 +65,17 @@ public class LectureController {
     @Operation(summary = "강의 목록 조회", description = "플랫폼과 제목으로 강의를 검색합니다.")
     public PagedSuccessResponse<LectureDTO.LectureResponse> getLectures(
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
-            @RequestParam(required = false) @Parameter(description = "강의 플랫폼") String platform,
+            @RequestParam(required = false) @Parameter(description = "강의 플랫폼 (쉼표로 구분된 문자열, 예: youtube,udemy)") String platforms,
             @RequestParam(required = false) @Parameter(description = "강의 제목") String title
     ) {
         Page<LectureDTO.LectureResponse> responses;
-        PlatformType platformType = null;
+        List<PlatformType> platformType = new ArrayList<>();
 
-        if (platform != null) {
-            platformType = platformTypeManager.getPlatformTypeByName(platform);
-            System.out.println(platformType.getCode());
-            System.out.println(platformType.getName());
+        if (platforms != null) {
+            platformType = platformTypeManager.getPlatformTypesByNames(platforms);
+
         }
-        responses = lectureService.getLectures(Optional.ofNullable(title), Optional.ofNullable(platformType), pageable);
+        responses = lectureService.getLectures(Optional.ofNullable(title), platformType, pageable);
 
         return PagedSuccessResponse.success(responses);
     }

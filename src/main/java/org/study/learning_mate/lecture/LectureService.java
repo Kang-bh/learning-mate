@@ -102,10 +102,14 @@ public class LectureService {
 
     public Page<LectureDTO.LectureResponse> getLectures(
         Optional<String> title,
-        Optional<PlatformType> platform,
+        List<PlatformType> platforms,
         Pageable pageable
     ) {
-        Specification<Lecture> spec = LectureSpecification.filterBy(title, platform);
+        for (PlatformType platformType : platforms) {
+            System.out.println("platformType" + platformType.getCode());
+        }
+
+        Specification<Lecture> spec = LectureSpecification.filterBy(title, platforms);
         List<Sort.Order> sortedOrders = pageable.getSort().stream()
                 .map(order -> new Sort.Order(order.getDirection(), switchKeyName(order.getProperty())))
                 .collect(Collectors.toList());

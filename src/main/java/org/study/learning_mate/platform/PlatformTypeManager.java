@@ -4,9 +4,7 @@ import jakarta.persistence.Enumerated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -57,5 +55,18 @@ public class PlatformTypeManager {
                 .filter(platformType -> platformType.getName().equalsIgnoreCase(name))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Platform not found: " + name));
+    }
+
+    public List<PlatformTypeManager.PlatformType> getPlatformTypesByNames(String names) {
+        if (names == null || names.isEmpty()) {
+            System.out.println(1111111);
+            return Collections.emptyList();
+        }
+
+        System.out.println(222222);
+        return Arrays.stream(names.split(","))
+                .map(String::trim)
+                .map(this::getPlatformTypeByName)
+                .collect(Collectors.toList());
     }
 }
