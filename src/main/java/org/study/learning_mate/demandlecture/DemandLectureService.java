@@ -126,7 +126,14 @@ public class DemandLectureService {
     }
 
     public Page<DemandLectureDTO.DemandLectureDetailResponse> findMyDemandLectureList(Pageable pageable, Long userId) {
-        Page<DemandLecture> demandLectures = demandLectureRepository.findByUserId(userId, pageable);
+
+        List<Sort.Order> sortedOrders = pageable.getSort().stream()
+                .map(order -> new Sort.Order(order.getDirection(), switchKeyName(order.getProperty())))
+                .collect(Collectors.toList());
+        Sort newSort = Sort.by(sortedOrders);
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), newSort);
+
+        Page<DemandLecture> demandLectures = demandLectureRepository.findByUserId(userId, sortedPageable);
 
         return demandLectureMapper.toDemandLectureDetailPageDTO(demandLectures);
     }
