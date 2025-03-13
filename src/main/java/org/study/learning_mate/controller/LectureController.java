@@ -126,6 +126,7 @@ public class LectureController {
     @GetMapping("/lectures/titles")
     @Parameters({
             @Parameter(name = "title", description = "찾고자하는 강의 제목 일부분", required = true),
+            @Parameter(name = "platform", description = "강의 플랫폼", required = true),
     })
     public SuccessResponse<List<String>> getLectureTitle (
             @RequestParam(required = true) String title,
