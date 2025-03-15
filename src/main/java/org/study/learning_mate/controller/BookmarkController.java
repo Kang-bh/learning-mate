@@ -5,12 +5,15 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.study.learning_mate.SuccessResponse;
+import org.study.learning_mate.bookmark.Bookmark;
 import org.study.learning_mate.bookmark.BookmarkService;
 import org.study.learning_mate.dto.BookmarkDTO;
 import org.study.learning_mate.dto.CustomUserDetails;
@@ -18,6 +21,7 @@ import org.study.learning_mate.dto.LectureDTO;
 import org.study.learning_mate.lecture.LectureService;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -42,13 +46,13 @@ public class BookmarkController {
             @Parameter(name = "size", description = "크기", required = false, example = "10"),
     })
     @GetMapping("/bookmarks")
-    public SuccessResponse<List<LectureDTO.LectureResponse>> getBookmarkLectures(
+    public SuccessResponse<Page<LectureDTO.LectureResponse>> getBookmarkLectures(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam(required = false) String platform,
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         Long userId = userDetails.getId();
-        List<Long> bookmarks = new ArrayList<>();
+        Page<Long> bookmarks = new PageImpl<>(Collections.EMPTY_LIST);
         if (platform == null) {
             bookmarks = bookmarkService.getBookmarks(
                 userId,
@@ -62,9 +66,10 @@ public class BookmarkController {
             );
         }
 
-
-        List<LectureDTO.LectureResponse> result = lectureService.findByLectureIds(bookmarks);
-        return SuccessResponse.success(result);
+        // todo : page를 Service 안에서 생성되도록
+        List<LectureDTO.LectureResponse> result = lectureService.findByLectureIds(bookmarks.stream().toList());
+        Page<LectureDTO.LectureResponse> pagingResult = new PageImpl<>(result, bookmarks.getPageable(), bookmarks.getTotalElements());
+        return SuccessResponse.success(pagingResult);
     }
 
     @Parameters({

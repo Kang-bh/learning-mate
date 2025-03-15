@@ -2,6 +2,7 @@ package org.study.learning_mate.bookmark;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,23 +37,23 @@ public class BookmarkService {
         this.postRepository = postRepository;
     }
 
-    public List<Long> getBookmarks(
+    public Page<Long> getBookmarks(
                 Long userId,
                 String platform,
                 Pageable pageable
             ) {
 
-        Page<Bookmark> result = bookmarkRepository.findBookmarksByPlatformTitleAndUserId(platform, userId, pageable);
-        return extractIds(result.stream().toList());
+        Page<Bookmark> results = bookmarkRepository.findBookmarksByPlatformTitleAndUserId(platform, userId, pageable);
+        return new PageImpl<>(extractIds(results.stream().toList()), results.getPageable(), results.getTotalElements());
     }
 
-    public List<Long> getBookmarks(
+    public Page<Long> getBookmarks(
             Long userId,
             Pageable pageable
     ) {
-        Page<Bookmark> result = bookmarkRepository.findByUser_Id(userId, pageable);
-        log.info("result : " + result);
-        return extractIds(result.stream().toList());
+        Page<Bookmark> results = bookmarkRepository.findByUser_Id(userId, pageable);
+        return new PageImpl<>(extractIds(results.stream().toList()), results.getPageable(), results.getTotalElements());
+        //        return extractIds(result.stream().toList());
     }
 
     public void addBookmark(Long postId, Long userId) {
