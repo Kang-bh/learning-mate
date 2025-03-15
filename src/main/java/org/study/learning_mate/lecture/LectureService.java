@@ -203,7 +203,7 @@ public class LectureService {
                 return "post.likeCounts";
             case "dislikes":
                 return "dislikeCounts";
-            case "createdTime":
+            case "createTime":
                 return "createdAt";
             case "views":
                 return "post.viewCounts";

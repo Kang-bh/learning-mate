@@ -142,7 +142,7 @@ public class DemandLectureService {
         switch (key) {
             case "likes":
                 return "demandLecturePK.post.likeCounts";
-            case "createdTime":
+            case "createTime":
                 return "createdAt";
             case "views":
                 return "demandLecturePK.post.viewCounts";

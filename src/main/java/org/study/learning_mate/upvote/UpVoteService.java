@@ -113,7 +113,7 @@ public class UpVoteService {
         switch (key) {
             case "likes":
                 return "likeCount";
-            case "createdTime":
+            case "createTime":
                 return "createdAt";
         }
         return key;
