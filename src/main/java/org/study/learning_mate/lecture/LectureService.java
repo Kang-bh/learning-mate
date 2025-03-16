@@ -23,10 +23,7 @@ import org.study.learning_mate.service.TextSummarizerService;
 import org.study.learning_mate.utils.LectureMapper;
 
 import javax.management.InstanceAlreadyExistsException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.study.learning_mate.post.PostType.LECTURE;
@@ -174,7 +171,10 @@ public class LectureService {
 
     public List<LectureDTO.LectureResponse> findByLectureIds (List<Long> bookmarkIds) {
         log.info("bookmark : " + bookmarkIds);
-        List<Lecture> result = lectureRepository.findAllById(bookmarkIds);
+        List<Lecture> result = lectureRepository.findAllById(bookmarkIds)
+                .stream()
+                .sorted(Comparator.comparing(lecture -> bookmarkIds.indexOf(lecture.getId())))
+                .collect(Collectors.toList());
         log.info("result : " + result );
         return lectureMapper.toLectureResponseDTOList(result);
     }

@@ -19,6 +19,7 @@ import org.study.learning_mate.dto.BookmarkDTO;
 import org.study.learning_mate.dto.CustomUserDetails;
 import org.study.learning_mate.dto.LectureDTO;
 import org.study.learning_mate.lecture.LectureService;
+import org.study.learning_mate.platform.PlatformTypeManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,19 +29,22 @@ import java.util.List;
 public class BookmarkController {
 
     private BookmarkService bookmarkService;
+    private final PlatformTypeManager platformTypeManager;
     private LectureService lectureService;
 
     public BookmarkController(
             BookmarkService bookmarkService,
-            LectureService lectureService
+            LectureService lectureService,
+            PlatformTypeManager platformTypeManager
     ) {
+        this.platformTypeManager = platformTypeManager;
         this.bookmarkService = bookmarkService;
         this.lectureService = lectureService;
     }
 
     @Parameters({
             @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
-            @Parameter(name = "platform", required = false, description = "플랫폼 이름"),
+            @Parameter(description = "강의 플랫폼 (쉼표로 구분된 문자열, 예: youtube,udemy)"),
             @Parameter(name = "sort", description = "정렬 순서", required = false, example = "id,asc"),
             @Parameter(name = "page", description = "페이지 수", required = false, example = "0"),
             @Parameter(name = "size", description = "크기", required = false, example = "10"),
@@ -48,25 +52,29 @@ public class BookmarkController {
     @GetMapping("/bookmarks")
     public SuccessResponse<Page<LectureDTO.LectureResponse>> getBookmarkLectures(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestParam(required = false) String platform,
+            @RequestParam(required = false) @Parameter(description = "강의 플랫폼 (쉼표로 구분된 문자열, 예: youtube,udemy)") String platforms,
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         Long userId = userDetails.getId();
         Page<Long> bookmarks = new PageImpl<>(Collections.EMPTY_LIST);
-        if (platform == null) {
+        List<PlatformTypeManager.PlatformType> platformType = new ArrayList<>();
+
+        if (platforms == null) {
             bookmarks = bookmarkService.getBookmarks(
                 userId,
                 pageable
             );
         } else {
+            platformType = platformTypeManager.getPlatformTypesByNames(platforms);
             bookmarks = bookmarkService.getBookmarks(
                     userId,
-                    platform,
+                    platformType,
                     pageable
             );
         }
 
         // todo : page를 Service 안에서 생성되도록
+        System.out.println("bookmarks: " + bookmarks);
         List<LectureDTO.LectureResponse> result = lectureService.findByLectureIds(bookmarks.stream().toList());
         Page<LectureDTO.LectureResponse> pagingResult = new PageImpl<>(result, bookmarks.getPageable(), bookmarks.getTotalElements());
         return SuccessResponse.success(pagingResult);
@@ -118,4 +126,6 @@ public class BookmarkController {
         boolean result = bookmarkService.isExistBookmark(postId, customUserDetails.getId());
         return SuccessResponse.success(result);
     }
+
+
 }

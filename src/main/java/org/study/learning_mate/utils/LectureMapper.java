@@ -31,8 +31,8 @@ public class LectureMapper {
                 .dislikes(lecture.getDislikeCounts())
                 .views(lecture.getPost().getViewCounts())
                 .platform(platformMapper.toPlatformDTO(lecture.getPlatform()))
-                .createTime(lecture.getCreatedAt())
-                .updateTime(lecture.getUpdatedAt())
+                .createTime(lecture.getPost().getCreatedAt())
+                .updateTime(lecture.getPost().getUpdatedAt())
                 .build();
     }
 

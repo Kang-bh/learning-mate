@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class LectureDTO {
@@ -22,8 +23,8 @@ public class LectureDTO {
         private Long views;
         private Long comments;
         private PlatformDTO.PlatformResponse platform;
-        private Date createTime;
-        private Date updateTime;
+        private LocalDateTime createTime;
+        private LocalDateTime updateTime;
     }
 
     @Getter
