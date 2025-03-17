@@ -124,6 +124,8 @@ public class BookmarkService {
             case "likes":
                 System.out.println("1111");
                 return "post.likeCounts";
+            case "dislikes":
+                return "post.lecture.dislikeCounts";
             case "createTime":
                 return "post.createdAt";
             case "views":
