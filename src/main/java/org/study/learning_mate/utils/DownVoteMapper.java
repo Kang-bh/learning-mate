@@ -26,8 +26,8 @@ public class DownVoteMapper {
                 .title(downVote.getTitle())
                 .reason(downVote.getReason())
                 .likeCount(downVote.getLikeCount())
-                .createAt(downVote.getCreatedAt())
-                .updateAt(downVote.getUpdatedAt())
+                .createTime(downVote.getCreatedAt())
+                .updateTime(downVote.getUpdatedAt())
                 .build();
     }
 

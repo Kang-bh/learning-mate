@@ -444,3 +444,4 @@ org.study.learning_mate.global.ErrorResponse: No property 'createTIme' found for
 2025-03-17T13:14:21.527+09:00  INFO 48836 --- [learning-mate] [http-nio-8080-exec-9] o.s.l.config.auth.CustomLogoutFilter     : requestUri: /api/v1/posts/273/down-votes
 2025-03-17T13:15:03.448+09:00  INFO 48836 --- [learning-mate] [http-nio-8080-exec-10] o.s.l.config.auth.CustomLogoutFilter     : requestUri: /api/v1/posts/273/down-votes
 2025-03-17T13:15:06.125+09:00  INFO 48836 --- [learning-mate] [http-nio-8080-exec-1] o.s.l.config.auth.CustomLogoutFilter     : requestUri: /api/v1/posts/273/down-votes
+2025-03-17T13:26:24.272+09:00  INFO 48836 --- [learning-mate] [http-nio-8080-exec-4] o.s.l.config.auth.CustomLogoutFilter     : requestUri: /api/v1/posts/273/down-votes

@@ -19,8 +19,8 @@ public class DownVoteDTO {
         private String title;
         private String reason;
         private Long likeCount;
-        private Date createAt;
-        private Date updateAt;
+        private Date createTime;
+        private Date updateTime;
     }
 
     @Getter
