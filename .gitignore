@@ -40,6 +40,9 @@ out/
 
 application.properties
 
+### application log
+application.log
+application.log.*
 
 ### docker file
 docker-compose-db.yml
