@@ -6,7 +6,7 @@ networks:
 
 services:
   blue:
-    image: kabyho3513/learning-mate-server:1.0.0
+    image: kabyho3513/learning-mate-server-prod:1.0.0
     container_name: blue
     ports:
       - "8081:8080"
@@ -15,7 +15,7 @@ services:
       - mysql
 
   green:
-    image: kabyho3513/learning-mate-server:1.0.0
+    image: kabyho3513/learning-mate-server-prod:1.0.0
     container_name: green
     ports:
       - "8082:8080"
@@ -24,7 +24,7 @@ services:
       - mysql
   mysql:
     image: mysql:8.0
-    container_name: learning-mate-mysql
+    container_name: learning-mate-mysql-prod
     environment:
       MYSQL_ROOT_PASSWORD: 1234
       MYSQL_DATABASE: learning-mate
@@ -39,7 +39,7 @@ services:
       - mysql-data:/var/lib/mysql
 
   redis:
-    container_name: learning-mate-redis
+    container_name: learning-mate-redis-prod
     image: redis:latest
     ports:
       - "6380:6379"
