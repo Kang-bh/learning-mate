@@ -24,7 +24,7 @@ services:
       - mysql
   mysql:
     image: mysql:8.0
-    container_name: learning-mate-mysql-prod
+    container_name: learning-mate-prod-mysql
     environment:
       MYSQL_ROOT_PASSWORD: 1234
       MYSQL_DATABASE: learning-mate
@@ -39,7 +39,7 @@ services:
       - mysql-data:/var/lib/mysql
 
   redis:
-    container_name: learning-mate-redis-prod
+    container_name: learning-mate-prod-redis
     image: redis:latest
     ports:
       - "6380:6379"
