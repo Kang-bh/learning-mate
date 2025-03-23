@@ -79,7 +79,9 @@ public class SecurityConfig {
                         configuration.setAllowedOrigins(Arrays.asList(
                                 "https://localhost:4000",
                                 "https://d2tlq4x5oaekvl.cloudfront.net",
-                                "https://d1530z8p59hoso.cloudfront.net/"
+                                "https://d1530z8p59hoso.cloudfront.net/",
+                                "https://learningmate.store/"
+
                         ));
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
