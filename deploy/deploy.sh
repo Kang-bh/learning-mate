@@ -5,7 +5,6 @@
 # 변수 정의
 IS_GREEN=$(docker ps | grep green) # 현재 실행 중인 컨테이너 확인
 MAX_RETRIES=30                     # Health Check 최대 재시도 횟수 (5분간 10초 간격)
-RETRY_COUNT=0                      # 현재 재시도 횟수
 BLUE_PORT=8081                     # Blue 컨테이너 포트
 GREEN_PORT=8082                    # Green 컨테이너 포트
 
