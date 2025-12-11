@@ -21,7 +21,7 @@ function health_check() {
 
     while [ $count -lt $retries ]; do
         echo "Health check on port $port..."
-        RESPONSE=$(curl --max-time 5 --silent --write-out "HTTPSTATUS:%{http_code}" --output /dev/null http://127.0.0.1:$port/health)
+        RESPONSE=$(curl --max-time 5 --silent --write-out "HTTPSTATUS:%{http_code}" --output /dev/null http://127.0.0.1:$port/api/v1/actuator/health)
         HTTP_STATUS=$(echo $RESPONSE | sed -e 's/.*HTTPSTATUS://')
 
         if [ "$HTTP_STATUS" -eq 200 ]; then
