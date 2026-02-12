@@ -38,7 +38,7 @@ public class CrawlService {
     ) {
         AwsBasicCredentials awsCreds = AwsBasicCredentials.create(accessKey, secretKey);
         this.lambdaClient = LambdaClient.builder()
-                .region(Region.AP_NORTHEAST_2)
+                .region(Region.US_EAST_1)
                 .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
                 .build();
         this.objectMapper = new ObjectMapper();
